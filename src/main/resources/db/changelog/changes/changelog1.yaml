@@ -1,0 +1,492 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1716867302116-1
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: user_id
+                  type: BIGINT
+            tableName: cart
+  - changeSet:
+      id: 1716867302116-2
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    unique: true
+                  name: category_name
+                  type: VARCHAR(255)
+            tableName: categories
+  - changeSet:
+      id: 1716867302116-3
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: count
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: order_id
+                  type: BIGINT
+            tableName: order_item
+  - changeSet:
+      id: 1716867302116-4
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: date
+              - column:
+                  constraints:
+                    nullable: false
+                  name: order_status
+                  type: ENUM('CANCELLED', 'DELIVERED', 'PENDING', 'PROCESSING', 'SHIPPED')
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+            tableName: orders
+  - changeSet:
+      id: 1716867302116-5
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: description
+                  type: VARCHAR(1500)
+              - column:
+                  name: image_link
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: rating
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: category_id
+                  type: BIGINT
+            tableName: products
+  - changeSet:
+      id: 1716867302116-6
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    unique: true
+                  name: refresh_token
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                    unique: true
+                  name: user_email
+                  type: VARCHAR(255)
+            tableName: refresh_token
+  - changeSet:
+      id: 1716867302116-7
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: description
+                  type: VARCHAR(500)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: rating
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: user_id
+                  type: BIGINT
+            tableName: reviews
+  - changeSet:
+      id: 1716867302116-8
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: role_id
+                  type: SMALLINT
+            tableName: role_user
+  - changeSet:
+      id: 1716867302116-9
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: SMALLINT
+              - column:
+                  name: role
+                  type: ENUM('ROLE_ADMIN', 'ROLE_DEFAULT_USER')
+            tableName: roles
+  - changeSet:
+      id: 1716867302116-10
+      author: yushk
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: building
+                  type: VARCHAR(255)
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+              - column:
+                  name: street
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                    unique: true
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: phone_number
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: surname
+                  type: VARCHAR(255)
+            tableName: users
+  - changeSet:
+      id: 1716867302116-11
+      author: yushk
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: user_id
+            indexName: FK32ql8ubntj5uh44ph9659tiih
+            tableName: orders
+  - changeSet:
+      id: 1716867302116-12
+      author: yushk (generated)
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: role_id
+            indexName: FK7tjfd3wunlpu0di6qpu5asgen
+            tableName: role_user
+  - changeSet:
+      id: 1716867302116-13
+      author: yushk
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: product_id
+            indexName: FKc5uhmwioq5kscilyuchp4w49o
+            tableName: order_item
+  - changeSet:
+      id: 1716867302116-14
+      author: yushk
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: user_id
+            indexName: FKcgy7qjc1r99dp117y9en6lxye
+            tableName: reviews
+  - changeSet:
+      id: 1716867302116-15
+      author: yushk
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: user_id
+            indexName: FKg5uhi8vpsuy0lgloxk2h4w5o6
+            tableName: cart
+  - changeSet:
+      id: 1716867302116-16
+      author: yushk
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: category_id
+            indexName: FKog2rp4qthbtt2lfyhfo32lsw9
+            tableName: products
+  - changeSet:
+      id: 1716867302116-17
+      author: yushk
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: orders
+            constraintName: FK32ql8ubntj5uh44ph9659tiih
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: users
+            validate: true
+  - changeSet:
+      id: 1716867302116-18
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: role_user
+            constraintName: FK7tjfd3wunlpu0di6qpu5asgen
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: roles
+            validate: true
+  - changeSet:
+      id: 1716867302116-19
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: order_item
+            constraintName: FKc5uhmwioq5kscilyuchp4w49o
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: products
+            validate: true
+  - changeSet:
+      id: 1716867302116-20
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: reviews
+            constraintName: FKcgy7qjc1r99dp117y9en6lxye
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: users
+            validate: true
+  - changeSet:
+      id: 1716867302116-21
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: cart
+            constraintName: FKg5uhi8vpsuy0lgloxk2h4w5o6
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: users
+            validate: true
+  - changeSet:
+      id: 1716867302116-22
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: role_user
+            constraintName: FKhvai2k29vlwpt9wod4sw4ghmn
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: users
+            validate: true
+  - changeSet:
+      id: 1716867302116-23
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: products
+            constraintName: FKog2rp4qthbtt2lfyhfo32lsw9
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: categories
+            validate: true
+  - changeSet:
+      id: 1716867302116-24
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: reviews
+            constraintName: FKpl51cejpw4gy5swfar8br9ngi
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: products
+            validate: true
+  - changeSet:
+      id: 1716867302116-25
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: cart
+            constraintName: FKpu4bcbluhsxagirmbdn7dilm5
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: products
+            validate: true
+  - changeSet:
+      id: 1716867302116-26
+      author: yushk (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: order_item
+            constraintName: FKt4dc2r9nbvbujrljv3e23iibt
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: orders
+            validate: true
+

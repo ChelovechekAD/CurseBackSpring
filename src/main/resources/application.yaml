@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    username: JD2User
+    password: 973341
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/course-project?createDatabaseIfNotExist=true
+  application:
+    name: CurseBackSpring
+    security:
+      jwt:
+        access-key:
+          value: "gpgdKY9zR4hebFb2wT67AlgsKmbTOmKoyqmGym1dKmM="
+          expiration-time: 20
+        refresh-key:
+          value: "7+bbUaAIaRFDce4rxQLu5QFPqooqHLgfN5mnDB7PNT4="
+          expiration-time: 120
+  mvc:
+    log-resolved-exception: off
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database: mysql
+    properties:
+      hibernate:
+        show_sql: true
+  liquibase:
+    enabled: true
+    password: 973341
+    user: JD2User
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+
+
