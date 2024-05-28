@@ -1,0 +1,603 @@
+{
+	"info": {
+		"_postman_id": "0c3591a9-e73a-42fd-8b1d-2890f814b14f",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34582258"
+	},
+	"item": [
+		{
+			"name": "admin get users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODU5NDM2LCJpZCI6MSwicm9sZXMiOlt7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9LHsiaWQiOjQsInJvbGUiOiJST0xFX0RFRkFVTFRfVVNFUiJ9XX0.TOBiZC9RH81GOfcCwy3cj93cA_dM8pmGPRDeRxI4lfY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/admin/get/users?pageNum=0&countPerPage=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"get",
+						"users"
+					],
+					"query": [
+						{
+							"key": "pageNum",
+							"value": "0"
+						},
+						{
+							"key": "countPerPage",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "catalog get product  reviews",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/catalog/product/10000/reviews?pageNum=0&countPerPage=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"catalog",
+						"product",
+						"10000",
+						"reviews"
+					],
+					"query": [
+						{
+							"key": "pageNum",
+							"value": "0"
+						},
+						{
+							"key": "countPerPage",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "catalog get product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODU3OTA5LCJpZCI6MSwicm9sZXMiOlt7ImlkIjo0LCJyb2xlIjoiUk9MRV9ERUZBVUxUX1VTRVIifSx7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9XX0.3id9D9ASNP5vSPKM70ttsBZ0CxYjFcb6rxvOXDWrF5g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/catalog/product/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"catalog",
+						"product",
+						"1"
+					],
+					"query": [
+						{
+							"key": "countPerPage",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "pageNum",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "categoryId",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin get orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/admin/get/orders?pageNum=0&countPerPage=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"get",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "pageNum",
+							"value": "0"
+						},
+						{
+							"key": "countPerPage",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin add category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODY1NDgwLCJpZCI6MSwicm9sZXMiOlt7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9LHsiaWQiOjQsInJvbGUiOiJST0xFX0RFRkFVTFRfVVNFUiJ9XX0._ph7Jv-npqtC_OeH2LWNyax9njPgaqwzFTshTd56EU4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryName\":\"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/admin/add/category",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"add",
+						"category"
+					],
+					"query": [
+						{
+							"key": "pageNum",
+							"value": "0",
+							"disabled": true
+						},
+						{
+							"key": "countPerPage",
+							"value": "10",
+							"disabled": true
+						},
+						{
+							"key": "categoryName",
+							"value": "TestSpring",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin add product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryId\":1,\r\n    \"name\":\"TestSpring\",\r\n    \"description\":\"Nothing here!\",\r\n    \"price\":22.22,\r\n    \"imageLink\":\"Nothing here!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/admin/add/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"add",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update order status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODU3OTA5LCJpZCI6MSwicm9sZXMiOlt7ImlkIjo0LCJyb2xlIjoiUk9MRV9ERUZBVUxUX1VTRVIifSx7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9XX0.3id9D9ASNP5vSPKM70ttsBZ0CxYjFcb6rxvOXDWrF5g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"orderId\":1111,\r\n    \"orderStatus\":\"SHIPPED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/admin/update/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"update",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin delete category",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryId\":\"12\",\r\n    \"root\":true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/admin/delete/category",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"delete",
+						"category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user cart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/cart/?userId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"cart",
+						""
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"yushkevich2004@mail.ru\",\r\n    \"password\": \"973341\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reg",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"chelovektest.ru\",\r\n    \"name\":\"Artem\",\r\n    \"surname\":\"Chelovek\",\r\n    \"password\":\"973341\",\r\n    \"passwordConfirm\":\"973341\",\r\n    \"phoneNumber\":\"+324 20 10012342\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/registration",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"registration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODYzOTUwLCJpZCI6MSwicm9sZXMiOlt7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9LHsiaWQiOjQsInJvbGUiOiJST0xFX0RFRkFVTFRfVVNFUiJ9XX0.1KYOHVyrt6iogqWsSTbRGYIia52_jh6Jq1ufvCa_SYw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Test\",\r\n    \"surname\":\"Test\",\r\n    \"city\":\"Test\",\r\n    \"street\":\"Test\",\r\n    \"building\":123\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/1/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"1",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODYzNjc5LCJpZCI6MSwicm9sZXMiOlt7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9LHsiaWQiOjQsInJvbGUiOiJST0xFX0RFRkFVTFRfVVNFUiJ9XX0.akYGNpINo7SZYEqeAEH_Vxtp_enlvFtMJZByiDAHSFQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/catalog/product/1/reviews/user_review",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"catalog",
+						"product",
+						"1",
+						"reviews",
+						"user_review"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODY2NzcyLCJpZCI6MSwicm9sZXMiOlt7ImlkIjo0LCJyb2xlIjoiUk9MRV9ERUZBVUxUX1VTRVIifSx7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9XX0.PH7uT-LDrjzbX4Dek81GtET9301vT8_rV7kxOxTYiDQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"description\": \"asddgfdfsklgjlkasjdlknlkshda;lsdj;hljkdhfsdkfhsldfsdjhflsdf\",\r\n        \"rating\":1.5,\r\n        \"userId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/catalog/product/1/reviews/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"catalog",
+						"product",
+						"1",
+						"reviews",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5dXNoa2V2aWNoMjAwNEBtYWlsLnJ1IiwiZXhwIjoxNzE2ODY2NzcyLCJpZCI6MSwicm9sZXMiOlt7ImlkIjo0LCJyb2xlIjoiUk9MRV9ERUZBVUxUX1VTRVIifSx7ImlkIjozLCJyb2xlIjoiUk9MRV9BRE1JTiJ9XX0.PH7uT-LDrjzbX4Dek81GtET9301vT8_rV7kxOxTYiDQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/catalog/product/1/reviews/delete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"catalog",
+						"product",
+						"1",
+						"reviews",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
