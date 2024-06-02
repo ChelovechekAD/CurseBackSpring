@@ -18,6 +18,7 @@ public class OrdersDTO {
     @NotNull
     private List<OrderDTO> orderList;
 
+    @NotNull
     @Min(0)
     private Long count;
 }

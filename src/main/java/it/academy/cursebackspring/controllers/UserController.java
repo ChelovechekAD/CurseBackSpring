@@ -11,13 +11,19 @@ import it.academy.cursebackspring.dto.response.UserReviewsDTO;
 import it.academy.cursebackspring.services.OrderService;
 import it.academy.cursebackspring.services.ReviewService;
 import it.academy.cursebackspring.services.UserService;
+import it.academy.cursebackspring.utilities.Constants;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/v1/user/{userId}")
 public class UserController {
 
@@ -27,14 +33,22 @@ public class UserController {
 
     @GetMapping()
     @PreAuthorize(value = "#userId == authentication.principal.id")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable
+                                           @Valid
+                                           @NotNull
+                                           @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION)
+                                           Long userId) {
         UserDTO userDTO = userService.getUserById(userId);
         return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/reviews")
     @PreAuthorize(value = "#userId == authentication.principal.id")
-    public ResponseEntity<UserReviewsDTO> getUserReviews(@PathVariable Long userId, GetUserReviewsDTO dto) {
+    public ResponseEntity<UserReviewsDTO> getUserReviews(@PathVariable
+                                                         @Valid
+                                                         @NotNull
+                                                         @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long userId,
+                                                         @Valid GetUserReviewsDTO dto) {
         dto.setUserId(userId);
         UserReviewsDTO reviewsDTO = reviewService.getAllUserReviews(dto);
         return ResponseEntity.ok(reviewsDTO);
@@ -42,7 +56,11 @@ public class UserController {
 
     @GetMapping("/orders")
     @PreAuthorize(value = "#userId == authentication.principal.id")
-    public ResponseEntity<OrdersDTO> getUserOrders(@PathVariable Long userId, GetUserOrderPageDTO dto) {
+    public ResponseEntity<OrdersDTO> getUserOrders(@PathVariable
+                                                   @Valid
+                                                   @NotNull
+                                                   @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long userId,
+                                                   GetUserOrderPageDTO dto) {
         dto.setUserId(userId);
         OrdersDTO ordersDTO = orderService.getListOfUserOrders(dto);
         return ResponseEntity.ok(ordersDTO);
@@ -50,9 +68,15 @@ public class UserController {
 
     @GetMapping("/orders/{orderId}/items")
     @PreAuthorize(value = "#userId == authentication.principal.id")
-    public ResponseEntity<OrderItemsDTO> getUserOrderItems(@PathVariable(name = "userId") Long userId,
-                                                           @PathVariable(name = "orderId") Long orderId,
-                                                           GetOrderItemsDTO dto) {
+    public ResponseEntity<OrderItemsDTO> getUserOrderItems(@PathVariable(name = "userId")
+                                                           @Valid
+                                                           @NotNull
+                                                           @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long userId,
+                                                           @PathVariable(name = "orderId")
+                                                           @Valid
+                                                           @NotNull
+                                                           @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION) Long orderId,
+                                                           @Valid GetOrderItemsDTO dto) {
         dto.setOrderId(orderId);
         OrderItemsDTO orderItemsDTO = orderService.getOrderItems(dto);
         return ResponseEntity.ok(orderItemsDTO);
@@ -60,7 +84,11 @@ public class UserController {
 
     @PutMapping("/update")
     @PreAuthorize(value = "#userId == authentication.principal.id")
-    public ResponseEntity<?> updateUserInfo(@PathVariable(name = "userId") Long userId, @RequestBody UpdateUserDTO dto) {
+    public ResponseEntity<?> updateUserInfo(@PathVariable
+                                            @Valid
+                                            @NotNull
+                                            @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long userId,
+                                            @RequestBody @Valid UpdateUserDTO dto) {
         dto.setId(userId);
         userService.updateUser(dto);
         return ResponseEntity.ok().build();
@@ -68,7 +96,10 @@ public class UserController {
 
     @DeleteMapping("/delete")
     @PreAuthorize("#userId == authentication.principal.id")
-    public ResponseEntity<?> deleteUser(@PathVariable(name = "userId") Long userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable(name = "userId")
+                                        @Valid
+                                        @NotNull
+                                        @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }

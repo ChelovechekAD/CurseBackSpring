@@ -16,7 +16,6 @@ spring:
           expiration-time: 120
   mvc:
     log-resolved-exception: off
-
   jpa:
     hibernate:
       ddl-auto: validate

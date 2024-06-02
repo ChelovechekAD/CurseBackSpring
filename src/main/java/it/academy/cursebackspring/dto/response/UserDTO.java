@@ -15,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserDTO {
 
+    @NotNull
     @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION)
     private Long id;
 
@@ -30,6 +31,7 @@ public class UserDTO {
     @NotBlank(message = Constants.NAME_CANNOT_BE_BLANK_VALIDATION_EXCEPTION)
     private String name;
 
+    @NotBlank
     @Pattern(regexp = Constants.REG_EXP_PHONE_NUMBER, message = Constants.PHONE_NUMBER_VALIDATION_EXCEPTION)
     private String phoneNumber;
 

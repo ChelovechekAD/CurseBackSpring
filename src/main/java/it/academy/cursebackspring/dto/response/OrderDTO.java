@@ -17,6 +17,7 @@ import java.sql.Date;
 @Builder
 public class OrderDTO {
 
+    @NotNull
     @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION)
     private Long id;
 
@@ -26,6 +27,7 @@ public class OrderDTO {
     @NotNull
     private OrderStatus orderStatus;
 
+    @NotNull
     @Min(value = 0)
     private Long countOfItems;
 

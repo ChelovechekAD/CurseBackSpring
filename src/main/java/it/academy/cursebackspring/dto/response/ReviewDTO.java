@@ -1,10 +1,7 @@
 package it.academy.cursebackspring.dto.response;
 
 import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReviewDTO {
 
+    @NotNull
     @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION)
     private Long userId;
 
@@ -28,6 +26,7 @@ public class ReviewDTO {
     @NotBlank
     private String description;
 
+    @NotNull
     @DecimalMin(value = "0", message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
     @DecimalMax(value = "10", message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
     private Double rating;

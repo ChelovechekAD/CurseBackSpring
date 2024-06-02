@@ -18,6 +18,7 @@ public class OrderItemsDTO {
     @NotNull
     List<OrderItemProductDTO> orderItemProductDTOList;
 
+    @NotNull
     @Min(value = 0, message = "Count of order items cannot be less than 0.")
     Long totalCountOfItems;
 }

@@ -15,10 +15,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdateOrderStatusDTO {
 
-    @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION)
+    @NotNull(message = Constants.ORDER_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+    @Min(value = Constants.MIN_ORDER_ID, message = Constants.ORDER_ID_VALIDATION_EXCEPTION)
     private Long orderId;
 
-    @NotNull
+    @NotNull(message = Constants.ORDER_STATUS_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
     private OrderStatus orderStatus;
 
 }

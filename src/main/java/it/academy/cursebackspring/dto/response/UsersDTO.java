@@ -18,6 +18,7 @@ public class UsersDTO {
     @NotNull
     private List<UserDTO> userDTOList;
 
+    @NotNull
     @Min(value = 0, message = Constants.COUNT_CANNOT_BE_LESS_THAN_VALIDATION_EXCEPTION)
     private Long count;
 }

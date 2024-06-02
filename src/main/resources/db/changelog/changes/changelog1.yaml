@@ -245,7 +245,7 @@ databaseChangeLog:
                   type: BIGINT
               - column:
                   name: building
-                  type: VARCHAR(255)
+                  type: INT
               - column:
                   name: city
                   type: VARCHAR(255)

@@ -20,6 +20,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -29,8 +30,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
-@Validated
+@Transactional(propagation = Propagation.REQUIRED)
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepos categoryRepos;
@@ -42,10 +42,11 @@ public class CategoryServiceImpl implements CategoryService {
      *
      * @param categoryName name of the new category
      */
-    public void addCategory(@Valid @NotBlank(message = Constants.CATEGORY_NAME_VALIDATION_EXCEPTION) String categoryName) {
-        Optional.of(categoryRepos.existsByCategoryName(categoryName))
-                .filter(p -> !p)
-                .orElseThrow(CategoryExistException::new);
+    @Override
+    public void addCategory(String categoryName) {
+        if (categoryRepos.existsByCategoryName(categoryName)){
+            throw new CategoryExistException();
+        }
         Category category = Category.builder()
                 .categoryName(categoryName)
                 .build();
@@ -61,21 +62,21 @@ public class CategoryServiceImpl implements CategoryService {
      * @param categoryId id of the category
      * @param root       flag, used for delete a category with existing products
      */
-    public void deleteCategory(@Valid @Min(value = 1, message = Constants.CATEGORY_ID_VALIDATION_EXCEPTION) Long categoryId,
-                               @NonNull Boolean root) {
-        Optional.of(categoryRepos.existsById(categoryId))
-                .filter(p -> p)
-                .orElseThrow(CategoryNotFoundException::new);
+    @Override
+    public void deleteCategory(Long categoryId, Boolean root) {
+        if (!categoryRepos.existsById(categoryId)){
+            throw new CategoryNotFoundException();
+        }
         boolean prodExist = productRepos.existsProductByCategoryId(categoryId);
         if (prodExist) {
             if (!root) {
                 throw new CategoryDeleteException(Constants.CATEGORY_PRODUCT_EXIST_EXCEPTION_MESSAGE);
             }
-            Optional.of(orderItemRepos.existsByOrderItemPK_Product_CategoryId(categoryId))
-                    .filter(p -> !p)
-                    .orElseThrow(ProductUsedInOrdersException::new);
+            if (orderItemRepos.existsByOrderItemPK_Product_CategoryId(categoryId)){
+                throw new ProductUsedInOrdersException();
+            }
+            productRepos.deleteAllByCategory_Id(categoryId);
         }
-        productRepos.deleteAllByCategory_Id(categoryId);
         categoryRepos.deleteById(categoryId);
     }
 
@@ -85,7 +86,8 @@ public class CategoryServiceImpl implements CategoryService {
      *
      * @param dto include new category name and category id
      */
-    public void updateCategory(@Valid UpdateCategoryDTO dto) {
+    @Override
+    public void updateCategory(UpdateCategoryDTO dto) {
         Category category = categoryRepos.findById(dto.getCategoryId())
                 .orElseThrow(CategoryNotFoundException::new);
         category.setCategoryName(dto.getCategoryName());
@@ -97,6 +99,7 @@ public class CategoryServiceImpl implements CategoryService {
      *
      * @return all existing categories
      */
+    @Override
     @Transactional(readOnly = true)
     public CategoriesDTO getAllCategories() {
         List<Category> list = categoryRepos.findAll();

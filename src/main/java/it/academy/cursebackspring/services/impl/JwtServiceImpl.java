@@ -17,14 +17,17 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
+@Validated
 public class JwtServiceImpl implements JwtService {
 
     private final UserRepos userRepos;
@@ -37,6 +40,7 @@ public class JwtServiceImpl implements JwtService {
      * @param user user object
      * @return dto with access, refresh tokens and user data
      */
+    @Override
     public LoginUserJwtDTO generateNewPairOfTokens(@Valid User user) {
         String accessToken = jwtUtils.generateAccessToken(user);
         String refreshToken = jwtUtils.generateRefreshToken(user);
@@ -51,11 +55,12 @@ public class JwtServiceImpl implements JwtService {
      * @param email user email
      * @param token token to be saved
      */
-    public void saveRefreshToken(@Valid @Email String email,
+
+    private void saveRefreshToken(@Valid @Email String email,
                                  @Valid @NotBlank(message = Constants.TOKEN_MUST_NOT_BE_BLANK_VALIDATION_EXCEPTION) String token) {
-        Optional.of(userRepos.existsUserByEmail(email))
-                .filter(p -> p)
-                .orElseThrow(UserNotFoundException::new);
+        if (!userRepos.existsUserByEmail(email)){
+            throw new UserNotFoundException();
+        }
         refreshTokenRepos.save(JwtMapper.INSTANCE.createEntity(email, token));
     }
 
@@ -66,11 +71,12 @@ public class JwtServiceImpl implements JwtService {
      * @param refreshToken old refresh token
      * @return dto with access, refresh tokens and user data
      */
+    @Override
     public LoginUserJwtDTO regenerateTokens(
             @Valid @NotBlank(message = Constants.TOKEN_MUST_NOT_BE_BLANK_VALIDATION_EXCEPTION) String refreshToken) {
-        Optional.of(jwtUtils.validateRefreshToken(refreshToken))
-                .filter(p -> p)
-                .orElseThrow(RefreshTokenInvalidException::new);
+        if (!jwtUtils.validateRefreshToken(refreshToken)) {
+            throw new RefreshTokenInvalidException();
+        }
         String email = jwtUtils.getRefreshClaims(refreshToken).getSubject();
         User user = userRepos.findUserByEmail(email)
                 .orElseThrow(UserNotFoundException::new);

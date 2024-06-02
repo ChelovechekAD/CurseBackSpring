@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -80,15 +82,19 @@ public class HandlerExceptions {
         return buildExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> accessDeniedSpringException(AccessDeniedException e) {
-        return buildExceptionResponse(HttpStatus.FORBIDDEN, e);
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ResponseEntity<?> internalAuthenticationServiceException(Exception e) {
+        return buildExceptionResponse(HttpStatus.NOT_FOUND, e);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> internalServerError(Exception e) {
+    public ResponseEntity<?> internalServerError(Exception e) throws Exception {
+        if (e instanceof AccessDeniedException || e instanceof AuthenticationException) {
+            throw e;
+        }
         return buildExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
+
 
     private ResponseEntity<Object> buildExceptionResponse(HttpStatusCode code, Exception e) {
         var exceptionResponse = ExceptionResponse.builder()
@@ -96,7 +102,7 @@ public class HandlerExceptions {
                 .ExceptionMessage(e.getMessage())
                 .TimeStamp(LocalDateTime.now())
                 .build();
-        log.error("Error: {}.", e.getLocalizedMessage());
+        log.error("Error: {}", e.getLocalizedMessage());
         return ResponseEntity.status(code).body(exceptionResponse);
     }
 

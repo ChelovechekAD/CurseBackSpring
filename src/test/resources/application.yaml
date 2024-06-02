@@ -6,12 +6,22 @@ spring:
     url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
   application:
     name: CurseBackSpring
+    security:
+      jwt:
+        access-key:
+          value: "gpgdKY9zR4hebFb2wT67AlgsKmbTOmKoyqmGym1dKmM="
+          expiration-time: 20
+        refresh-key:
+          value: "7+bbUaAIaRFDce4rxQLu5QFPqooqHLgfN5mnDB7PNT4="
+          expiration-time: 120
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     database: h2
     properties:
       hibernate:
         show_sql: true
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml

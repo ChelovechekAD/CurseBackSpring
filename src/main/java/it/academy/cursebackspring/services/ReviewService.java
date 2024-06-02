@@ -8,13 +8,13 @@ import it.academy.cursebackspring.dto.response.UserReviewsDTO;
 import jakarta.validation.Valid;
 
 public interface ReviewService {
-    void createReview(@Valid CreateReviewDTO createReviewDTO);
+    void createReview(CreateReviewDTO createReviewDTO);
 
-    ReviewDTO getSingleReviewOnProductByUserId(@Valid GetReviewDTO getReviewDTO);
+    ReviewDTO getSingleReviewOnProductByUserId(GetReviewDTO getReviewDTO);
 
-    void deleteReviewOnProductByUserId(@Valid DeleteReviewDTO deleteReviewDTO);
+    void deleteReviewOnProductByUserId(DeleteReviewDTO deleteReviewDTO);
 
-    ReviewsDTO getAllReviewsPage(@Valid GetReviewsDTO getReviewsDTO);
+    ReviewsDTO getAllReviewsPage(GetReviewsDTO getReviewsDTO);
 
-    UserReviewsDTO getAllUserReviews(@Valid GetUserReviewsDTO getUserReviewsDTO);
+    UserReviewsDTO getAllUserReviews(GetUserReviewsDTO getUserReviewsDTO);
 }

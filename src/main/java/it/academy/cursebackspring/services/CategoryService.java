@@ -9,12 +9,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.NonNull;
 
 public interface CategoryService {
-    void addCategory(@Valid @NotBlank(message = Constants.CATEGORY_NAME_VALIDATION_EXCEPTION) String categoryName);
+    void addCategory(String categoryName);
 
     CategoriesDTO getAllCategories();
 
-    void deleteCategory(@Valid @Min(value = 1, message = Constants.CATEGORY_ID_VALIDATION_EXCEPTION) Long categoryId,
-                        @NonNull Boolean root);
+    void deleteCategory(Long categoryId, Boolean root);
 
-    void updateCategory(@Valid UpdateCategoryDTO dto);
+    void updateCategory(UpdateCategoryDTO dto);
 }

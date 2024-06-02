@@ -16,7 +16,8 @@ import java.util.List;
 @Builder
 public class CreateOrderDTO {
 
-    @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION)
+    @NotNull(message = Constants.USER_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+    @Min(value = Constants.MIN_USER_ID, message = Constants.USER_ID_VALIDATION_EXCEPTION)
     private Long userId;
 
     @NotNull

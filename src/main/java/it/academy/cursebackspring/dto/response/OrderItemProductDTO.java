@@ -1,10 +1,7 @@
 package it.academy.cursebackspring.dto.response;
 
 import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,12 +13,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OrderItemProductDTO {
 
+    @NotNull
     @Min(value = 1, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION)
     private Long productId;
 
+    @NotNull
     @Min(value = 0, message = Constants.COUNT_CANNOT_BE_LESS_THAN_VALIDATION_EXCEPTION)
     private Long count;
 
+    @NotNull
     @DecimalMin(value = "0.01", message = Constants.PRICE_CANNOT_BE_LESS_THAN_VALIDATION_EXCEPTION)
     private Double price;
 

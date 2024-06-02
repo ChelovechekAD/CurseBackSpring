@@ -16,11 +16,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -28,9 +30,8 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
-@Validated
 public class UserServiceImpl implements UserService {
 
     private final UserRepos userRepos;
@@ -40,10 +41,11 @@ public class UserServiceImpl implements UserService {
      *
      * @param user user object
      */
+    @Override
     public void saveUser(User user) {
-        Optional.of(userRepos.existsUserByEmail(user.getEmail()))
-                .filter(p -> !p)
-                .orElseThrow(UserExistException::new);
+        if (userRepos.existsUserByEmail(user.getEmail())) {
+            throw new UserExistException();
+        }
         userRepos.save(user);
     }
 
@@ -52,7 +54,8 @@ public class UserServiceImpl implements UserService {
      *
      * @param id user id
      */
-    public void deleteUser(@Valid @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long id) {
+    @Override
+    public void deleteUser(Long id) {
         userRepos.deleteUserById(id);
     }
 
@@ -61,7 +64,8 @@ public class UserServiceImpl implements UserService {
      *
      * @param dto new user information
      */
-    public void updateUser(@Valid UpdateUserDTO dto) {
+    @Override
+    public void updateUser(UpdateUserDTO dto) {
         User user = userRepos.findById(dto.getId())
                 .orElseThrow(UserNotFoundException::new);
         UserMapper.mergeEntityAndDTO(user, dto);
@@ -74,7 +78,8 @@ public class UserServiceImpl implements UserService {
      * @param id user id
      * @return dto which contains specific user information
      */
-    public UserDTO getUserById(@Valid @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long id) {
+    @Override
+    public UserDTO getUserById(Long id) {
         User user = userRepos.findById(id)
                 .orElseThrow(UserNotFoundException::new);
         return UserMapper.INSTANCE.toDTOFromEntity(user);
@@ -86,22 +91,25 @@ public class UserServiceImpl implements UserService {
      * @param requestDataDetailsDTO dto with page num and count per page.
      * @return list of dto which contains specific user information
      */
-    public UsersDTO getUsersPage(@Valid RequestDataDetailsDTO requestDataDetailsDTO) {
+    @Override
+    public UsersDTO getUsersPage(RequestDataDetailsDTO requestDataDetailsDTO) {
         Page<User> userPage = userRepos.findAll(PageRequest.of(requestDataDetailsDTO.getPageNum(),
                 requestDataDetailsDTO.getCountPerPage()));
         return UserMapper.INSTANCE.toUsersDTOFromEntityList(userPage, userPage.getTotalElements());
     }
 
-    private User getUserByEmail(@Valid @Email String email) {
+    private User getUserByEmail(String email) {
         return userRepos.findUserByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
     }
 
+    @Override
     public UserDetailsService userDetailsService() {
         return this::getUserByEmail;
     }
 
+    @Override
     public UserDTO getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return UserMapper.INSTANCE.toDTOFromEntity(getUserByEmail(email));

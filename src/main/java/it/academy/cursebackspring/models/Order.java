@@ -31,7 +31,8 @@ public class Order implements Serializable {
     @CreationTimestamp
     private Date createdAt;
 
-    @Column(name = "order_status", nullable = false)
+    @Column(name = "order_status", nullable = false,
+            columnDefinition = "enum(PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED)")
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private OrderStatus orderStatus = OrderStatus.PROCESSING;

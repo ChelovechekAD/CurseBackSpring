@@ -1,7 +1,15 @@
 package it.academy.cursebackspring.configurations;
 
-import it.academy.cursebackspring.filters.ExceptionHandlerFilter;
-import it.academy.cursebackspring.filters.JwtAuthFilter;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import it.academy.cursebackspring.security.CustomAccessDeniedHandler;
+import it.academy.cursebackspring.security.CustomizedAuthenticationEntryPoint;
+import it.academy.cursebackspring.security.JwtAuthFilter;
 import it.academy.cursebackspring.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +25,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -30,8 +40,8 @@ import java.util.List;
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-    private final ExceptionHandlerFilter exceptionHandlerFilter;
     private final UserService userService;
+    private final String[] ignoreUrls = {"/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v2/api-docs"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,11 +58,13 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(ignoreUrls).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/catalog/**", "/api/v1/cart/**", "/api/v1/user/**").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(exceptionHandlerFilter, JwtAuthFilter.class);
+                .exceptionHandling((exception) -> exception.accessDeniedHandler(accessDeniedHandler())
+                        .authenticationEntryPoint(authenticationEntryPoint()));
         return http.build();
     }
 
@@ -73,6 +85,16 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomizedAuthenticationEntryPoint();
     }
 
 }

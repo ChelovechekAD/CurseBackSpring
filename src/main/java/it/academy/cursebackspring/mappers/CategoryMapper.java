@@ -4,6 +4,7 @@ import it.academy.cursebackspring.dto.request.CategoryDTO;
 import it.academy.cursebackspring.dto.response.CategoriesDTO;
 import it.academy.cursebackspring.models.Category;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public interface CategoryMapper {
 
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
+    @Mapping(source = "id", target = "categoryId")
     CategoryDTO toDTOFromEntity(Category category);
 
     default CategoriesDTO toDTOFromEntityList(List<Category> categories) {

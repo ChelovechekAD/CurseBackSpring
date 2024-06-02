@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -27,9 +28,8 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
-@Validated
 public class CartServiceImpl implements CartService {
 
     private final CartItemRepos cartItemRepos;
@@ -42,7 +42,8 @@ public class CartServiceImpl implements CartService {
      *
      * @param dto important data for executing this method
      */
-    public void addOrUpdateItemInCart(@Valid AddOrUpdateItemInCartDTO dto) {
+    @Override
+    public void addOrUpdateItemInCart(AddOrUpdateItemInCartDTO dto) {
         Product product = productRepos.findById(dto.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
         User user = userRepos.findById(dto.getUserId())
@@ -57,7 +58,8 @@ public class CartServiceImpl implements CartService {
      *
      * @param dto important data for executing this method
      */
-    public void deleteItemFromCart(@Valid DeleteItemFromCartDTO dto) {
+    @Override
+    public void deleteItemFromCart(DeleteItemFromCartDTO dto) {
         Product product = productRepos.findById(dto.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
         User user = userRepos.findById(dto.getUserId())
@@ -72,11 +74,12 @@ public class CartServiceImpl implements CartService {
      * @param userId user identifier
      * @return dto which contains all items from user cart
      */
+    @Override
     @Transactional(readOnly = true)
-    public CartItemsDTO getAllCartByUserId(@Valid @Min(1) Long userId) {
-        Optional.of(userRepos.existsById(userId))
-                .filter(p -> p)
-                .orElseThrow(UserNotFoundException::new);
+    public CartItemsDTO getAllCartByUserId(Long userId) {
+        if (!userRepos.existsById(userId)) {
+            throw new UserNotFoundException();
+        }
         List<CartItem> cartItems = cartItemRepos.findCartItemsByCartItemPK_UserId(userId);
         return CartItemMapper.INSTANCE.toDTOFromEntityList(cartItems);
     }

@@ -24,7 +24,7 @@ import java.io.Serializable;
 public class CartItem implements Serializable {
 
     @EmbeddedId
-    @NotNull
+    @NotNull(message = Constants.CART_ITEM_PRIMARY_KEY_CANNOT_BE_NULL)
     private CartItemPK cartItemPK;
 
     @Column(nullable = false, name = "quantity")

@@ -1,9 +1,7 @@
 package it.academy.cursebackspring.dto.request;
 
 import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdateUserDTO {
 
-    @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION)
+    @NotNull(message = Constants.USER_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+    @Min(value = Constants.MIN_USER_ID, message = Constants.USER_ID_VALIDATION_EXCEPTION)
     private Long id;
 
     @NotBlank(message = Constants.NAME_CANNOT_BE_BLANK_VALIDATION_EXCEPTION)
@@ -30,7 +29,9 @@ public class UpdateUserDTO {
     @NotBlank(message = Constants.STREET_CANNOT_BE_BLANK_VALIDATION_EXCEPTION)
     private String street;
 
-    @Size(min = 1, max = 1000, message = Constants.BUILDING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
-    private String building;
+    @NotNull(message = Constants.BUILDING_CANNOT_BE_NULL_OR_BLANK_VALIDATION_EXCEPTION)
+    @Min(value = Constants.MIN_BUILDING, message = Constants.BUILDING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
+    @Max(value = Constants.MAX_BUILDING, message = Constants.BUILDING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
+    private Integer building;
 
 }

@@ -4,22 +4,26 @@ import it.academy.cursebackspring.dto.request.LoginUserDTO;
 import it.academy.cursebackspring.dto.request.RegUserDTO;
 import it.academy.cursebackspring.dto.response.LoginUserJwtDTO;
 import it.academy.cursebackspring.services.AuthService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/auth")
+@Validated
 public class AuthController {
 
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginUserDTO dto) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginUserDTO dto) {
         LoginUserJwtDTO out = authService.loginUser(dto);
         ResponseCookie cookie = ResponseCookie.from("refresh-token", out.getRefreshToken())
                 .httpOnly(true)
@@ -38,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> reg(@RequestBody RegUserDTO regUserDTO) {
+    public ResponseEntity<?> reg(@RequestBody @Valid RegUserDTO regUserDTO) {
         authService.regUser(regUserDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

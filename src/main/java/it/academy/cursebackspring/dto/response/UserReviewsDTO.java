@@ -19,6 +19,7 @@ public class UserReviewsDTO {
     @NotNull
     private List<UserReviewInfoDTO> reviews;
 
+    @NotNull
     @Min(value = 0, message = Constants.COUNT_CANNOT_BE_LESS_THAN_VALIDATION_EXCEPTION)
     private Long countOf;
 

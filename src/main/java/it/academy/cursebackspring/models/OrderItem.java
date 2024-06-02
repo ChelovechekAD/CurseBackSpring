@@ -31,6 +31,6 @@ public class OrderItem implements Serializable {
     private Long count;
 
     @Column(nullable = false)
-    @DecimalMin(value = "0.01", message = Constants.PRICE_CANNOT_BE_LESS_THAN_VALIDATION_EXCEPTION)
+    @DecimalMin(value = Constants.MIN_PRICE, message = Constants.PRICE_CANNOT_BE_LESS_THAN_VALIDATION_EXCEPTION)
     private Double price;
 }

@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -34,9 +35,8 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
-@Validated
 public class OrderServiceImpl implements OrderService {
 
     private final UserRepos userRepos;
@@ -51,8 +51,10 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param createOrderDTO - important data for executing this method
      */
-    public void createOrder(@Valid CreateOrderDTO createOrderDTO) {
-        User user = userRepos.findById(createOrderDTO.getUserId()).orElseThrow(UserNotFoundException::new);
+    @Override
+    public void createOrder(CreateOrderDTO createOrderDTO) {
+        User user = userRepos.findById(createOrderDTO.getUserId())
+                .orElseThrow(UserNotFoundException::new);
         Order order = OrderMapper.INSTANCE.toNewEntity(createOrderDTO, user);
         orderRepos.save(order);
         List<OrderItem> orderItemList = createOrderDTO.getOrderItems().stream()
@@ -62,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
                     return OrderItemMapper.INSTANCE.toEntity(orderItemDTO, order, product);
                 })
                 .toList();
-        cartItemRepos.deleteAllByCartItemPK_UserId(user.getId());
+        cartItemRepos.deleteAllByCartItemPK_UserId(createOrderDTO.getUserId());
         orderItemRepos.saveAll(orderItemList);
     }
 
@@ -71,7 +73,8 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param dto contains id of order and order status
      */
-    public void changeOrderStatus(@Valid UpdateOrderStatusDTO dto) {
+    @Override
+    public void changeOrderStatus(UpdateOrderStatusDTO dto) {
         OrderStatus status = dto.getOrderStatus();
         Order order = orderRepos.findById(dto.getOrderId())
                 .orElseThrow(OrderNotFoundException::new);
@@ -84,10 +87,11 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderId id of order
      */
-    public void deleteOrder(@Valid @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION) Long orderId) {
-        Optional.of(orderRepos.existsById(orderId))
-                .filter(p -> p)
-                .orElseThrow(OrderNotFoundException::new);
+    @Override
+    public void deleteOrder(Long orderId) {
+        if (!orderRepos.existsById(orderId)) {
+            throw new OrderNotFoundException();
+        }
         orderRepos.deleteByOrderId(orderId);
     }
 
@@ -97,8 +101,9 @@ public class OrderServiceImpl implements OrderService {
      * @param dto contains the page num and the count of elements per page
      * @return dto with list of the orders and total count of orders
      */
+    @Override
     @Transactional(readOnly = true)
-    public OrdersDTO getListOfOrders(@Valid RequestDataDetailsDTO dto) {
+    public OrdersDTO getListOfOrders(RequestDataDetailsDTO dto) {
         PageRequest pageRequest = PageRequest.of(dto.getPageNum(), dto.getCountPerPage());
         Page<Order> orders = orderRepos.findAll(pageRequest);
         List<OrderDTO> orderDTOList = orders.stream()
@@ -113,11 +118,12 @@ public class OrderServiceImpl implements OrderService {
      * @param dto contains the page num and the count of elements per page and user id
      * @return dto with list of the orders and total count of orders
      */
+    @Override
     @Transactional(readOnly = true)
-    public OrdersDTO getListOfUserOrders(@Valid GetUserOrderPageDTO dto) {
-        Optional.of(userRepos.existsById(dto.getUserId()))
-                .filter(p -> p)
-                .orElseThrow(UserNotFoundException::new);
+    public OrdersDTO getListOfUserOrders(GetUserOrderPageDTO dto) {
+        if (!userRepos.existsById(dto.getUserId())) {
+            throw new UserNotFoundException();
+        }
         Page<Order> orders = orderRepos.getOrdersByUserId(dto.getUserId(), PageRequest.of(dto.getPageNum(), dto.getCountPerPage()));
         List<OrderDTO> orderDTOList = orders.stream()
                 .map(e -> OrderMapper.INSTANCE.toOrderDTO(e, orderItemRepos.countOrderItemsByOrderItemPK_OrderId(e.getId())))
@@ -132,11 +138,12 @@ public class OrderServiceImpl implements OrderService {
      * @param dto important data for method execution
      * @return dto with the list of order items with total count of
      */
+    @Override
     @Transactional(readOnly = true)
-    public OrderItemsDTO getOrderItems(@Valid GetOrderItemsDTO dto) {
-        Optional.of(orderRepos.existsById(dto.getOrderId()))
-                .filter(p -> p)
-                .orElseThrow(OrderNotFoundException::new);
+    public OrderItemsDTO getOrderItems(GetOrderItemsDTO dto) {
+        if (!orderRepos.existsById(dto.getOrderId())) {
+            throw new OrderNotFoundException();
+        }
         Page<OrderItem> orderItems = orderItemRepos.getOrderItemsPageByOrderItemPK_OrderId(dto.getOrderId(),
                 PageRequest.of(dto.getPageNum(), dto.getCountPerPage()));
         return OrderItemMapper.INSTANCE.toOrderItemsDTO(orderItems.stream().toList(), orderItems.getTotalElements());
@@ -149,7 +156,8 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param dto contains order id and product id
      */
-    public void deleteOrderItem(@Valid DeleteOrderItemDTO dto) {
+    @Override
+    public void deleteOrderItem(DeleteOrderItemDTO dto) {
         Order order = orderRepos.findById(dto.getOrderId())
                 .orElseThrow(OrderNotFoundException::new);
         Product product = productRepos.findById(dto.getProductId())
@@ -164,7 +172,8 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param orderItemDTO important data for method execution
      */
-    public void addOrUpdateOrderItemToOrder(@Valid OrderItemDTO orderItemDTO) {
+    @Override
+    public void addOrUpdateOrderItemToOrder(OrderItemDTO orderItemDTO) {
         Order order = orderRepos.findById(orderItemDTO.getOrderId())
                 .orElseThrow(OrderNotFoundException::new);
         Product product = productRepos.findById(orderItemDTO.getProductId())

@@ -12,15 +12,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService {
 
-    void deleteUser(@Valid @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long id);
+    void deleteUser(Long id);
 
-    void updateUser(@Valid UpdateUserDTO dto);
+    void updateUser(UpdateUserDTO dto);
 
-    UsersDTO getUsersPage(@Valid RequestDataDetailsDTO requestDataDetailsDTO);
+    UsersDTO getUsersPage(RequestDataDetailsDTO requestDataDetailsDTO);
 
-    UserDTO getUserById(@Valid @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION) Long id);
+    UserDTO getUserById(Long id);
 
-    void saveUser(@Valid User user);
+    void saveUser(User user);
 
     UserDetailsService userDetailsService();
 

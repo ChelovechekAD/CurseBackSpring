@@ -8,20 +8,20 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 public interface OrderService {
-    void createOrder(@Valid CreateOrderDTO createOrderDTO);
+    void createOrder(CreateOrderDTO createOrderDTO);
 
-    void changeOrderStatus(@Valid UpdateOrderStatusDTO dto);
+    void changeOrderStatus(UpdateOrderStatusDTO dto);
 
-    void deleteOrder(@Valid @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION) Long orderId);
+    void deleteOrder(Long orderId);
 
-    OrdersDTO getListOfOrders(@Valid RequestDataDetailsDTO dto);
+    OrdersDTO getListOfOrders(RequestDataDetailsDTO dto);
 
-    OrderItemsDTO getOrderItems(@Valid GetOrderItemsDTO dto);
+    OrderItemsDTO getOrderItems(GetOrderItemsDTO dto);
 
-    void deleteOrderItem(@Valid DeleteOrderItemDTO dto);
+    void deleteOrderItem(DeleteOrderItemDTO dto);
 
-    void addOrUpdateOrderItemToOrder(@Valid OrderItemDTO orderItemDTO);
+    void addOrUpdateOrderItemToOrder(OrderItemDTO orderItemDTO);
 
-    OrdersDTO getListOfUserOrders(@Valid GetUserOrderPageDTO dto);
+    OrdersDTO getListOfUserOrders(GetUserOrderPageDTO dto);
 
 }

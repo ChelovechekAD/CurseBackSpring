@@ -11,9 +11,6 @@ public interface JwtService {
 
     LoginUserJwtDTO generateNewPairOfTokens(@Valid User user);
 
-    void saveRefreshToken(@Valid @Email String email,
-                          @Valid @NotBlank(message = Constants.TOKEN_MUST_NOT_BE_BLANK_VALIDATION_EXCEPTION) String token);
-
     LoginUserJwtDTO regenerateTokens(
             @Valid @NotBlank(message = Constants.TOKEN_MUST_NOT_BE_BLANK_VALIDATION_EXCEPTION) String refreshToken);
 

@@ -8,9 +8,9 @@ import jakarta.validation.constraints.Min;
 
 public interface CartService {
 
-    void addOrUpdateItemInCart(@Valid AddOrUpdateItemInCartDTO dto);
+    void addOrUpdateItemInCart(AddOrUpdateItemInCartDTO dto);
 
-    void deleteItemFromCart(@Valid DeleteItemFromCartDTO dto);
+    void deleteItemFromCart(DeleteItemFromCartDTO dto);
 
-    CartItemsDTO getAllCartByUserId(@Valid @Min(1) Long userId);
+    CartItemsDTO getAllCartByUserId(Long userId);
 }

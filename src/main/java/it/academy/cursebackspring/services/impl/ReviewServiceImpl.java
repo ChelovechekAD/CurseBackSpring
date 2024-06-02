@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -32,9 +33,8 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
-@Validated
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepos reviewRepos;
@@ -48,16 +48,17 @@ public class ReviewServiceImpl implements ReviewService {
      *
      * @param dto - important data for method execution
      */
-    public void createReview(@Valid CreateReviewDTO dto) {
+    @Override
+    public void createReview(CreateReviewDTO dto) {
         List<Object> list = getUserAndProduct(dto.getUserId(), dto.getProductId());
         Product product = (Product) list.get(0);
         User user = (User) list.get(1);
         ReviewPK reviewPK = new ReviewPK(user, product);
         Review review = ReviewMapper.INSTANCE.toEntityFromCreateDTO(dto);
         review.setReviewPK(reviewPK);
-        Optional.of(reviewRepos.existsById(reviewPK))
-                .filter(p -> !p)
-                .orElseThrow(ReviewExistException::new);
+        if (reviewRepos.existsById(reviewPK)) {
+            throw new ReviewExistException();
+        }
         reviewRepos.save(review);
         updateTotalRatingForProduct(product);
     }
@@ -70,8 +71,9 @@ public class ReviewServiceImpl implements ReviewService {
      * @param dto - important data for method execution
      * @return dto with review info
      */
+    @Override
     @Transactional(readOnly = true)
-    public ReviewDTO getSingleReviewOnProductByUserId(@Valid GetReviewDTO dto) {
+    public ReviewDTO getSingleReviewOnProductByUserId(GetReviewDTO dto) {
         List<Object> list = getUserAndProduct(dto.getUserId(), dto.getProductId());
         Product product = (Product) list.get(0);
         User user = (User) list.get(1);
@@ -88,7 +90,8 @@ public class ReviewServiceImpl implements ReviewService {
      *
      * @param dto important data for method execution
      */
-    public void deleteReviewOnProductByUserId(@Valid DeleteReviewDTO dto) {
+    @Override
+    public void deleteReviewOnProductByUserId(DeleteReviewDTO dto) {
         List<Object> list = getUserAndProduct(dto.getUserId(), dto.getProductId());
         Product product = (Product) list.get(0);
         User user = (User) list.get(1);
@@ -103,8 +106,9 @@ public class ReviewServiceImpl implements ReviewService {
      * @param getReviewsDTO - important data for method execution
      * @return dto with reviews on the product and total count.
      */
+    @Override
     @Transactional(readOnly = true)
-    public ReviewsDTO getAllReviewsPage(@Valid GetReviewsDTO getReviewsDTO) {
+    public ReviewsDTO getAllReviewsPage(GetReviewsDTO getReviewsDTO) {
         Page<Review> reviewPage = reviewRepos.findAllByReviewPK_ProductId(getReviewsDTO.getProductId(),
                 PageRequest.of(getReviewsDTO.getPageNum(), getReviewsDTO.getCountPerPage()));
         return ReviewMapper.INSTANCE.toDTOFromEntityList(reviewPage, reviewPage.getTotalElements());
@@ -116,8 +120,9 @@ public class ReviewServiceImpl implements ReviewService {
      * @param getUserReviewsDTO - important data for method execution
      * @return dto with user reviews and total count.
      */
+    @Override
     @Transactional(readOnly = true)
-    public UserReviewsDTO getAllUserReviews(@Valid GetUserReviewsDTO getUserReviewsDTO) {
+    public UserReviewsDTO getAllUserReviews(GetUserReviewsDTO getUserReviewsDTO) {
         Page<Review> reviewPage = reviewRepos.findAllByReviewPK_UserId(getUserReviewsDTO.getUserId(),
                 PageRequest.of(getUserReviewsDTO.getPageNum(), getUserReviewsDTO.getCountPerPage()));
         return ReviewMapper.INSTANCE.toUserReviewsDTOFromEntityList(reviewPage, reviewPage.getTotalElements());

@@ -16,10 +16,12 @@ public class UserReviewInfoDTO {
     @NotBlank
     private String description;
 
+    @NotNull
     @DecimalMin(value = "0", message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
     @DecimalMax(value = "10", message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
     private Double rating;
 
+    @NotNull
     @Min(value = 1, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION)
     private Long productId;
 

@@ -1,10 +1,7 @@
 package it.academy.cursebackspring.dto.request;
 
 import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,16 +15,17 @@ import java.io.Serializable;
 @Builder
 public class CreateReviewDTO implements Serializable {
 
-    @NotBlank
+    @NotBlank(message = Constants.DESCRIPTION_CANNOT_BE_NULL_OR_BLANK)
     private String description;
 
-    @DecimalMin(value = "0", message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
-    @DecimalMax(value = "10", message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
+    @NotNull(message = Constants.RATING_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+    @DecimalMin(value = Constants.MIN_RATING, message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
+    @DecimalMax(value = Constants.MAX_RATING, message = Constants.RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION)
     private Double rating;
 
-    @Min(value = 1, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION)
     private Long productId;
 
-    @Min(value = 1, message = Constants.USER_ID_VALIDATION_EXCEPTION)
+    @NotNull(message = Constants.USER_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+    @Min(value = Constants.MIN_USER_ID, message = Constants.USER_ID_VALIDATION_EXCEPTION)
     private Long userId;
 }

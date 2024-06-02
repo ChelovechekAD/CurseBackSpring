@@ -21,7 +21,8 @@ public class Role implements GrantedAuthority {
     private Short id;
 
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(nullable = false,
+            columnDefinition = "enum(ROLE_ADMIN, ROLE_DEFAULT_USER)")
     private RoleEnum role;
 
     @Override
