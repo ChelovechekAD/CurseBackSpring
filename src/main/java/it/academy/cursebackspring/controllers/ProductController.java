@@ -65,7 +65,7 @@ public class ProductController {
     }
 
     @GetMapping("/reviews/user_review")
-    public ResponseEntity<?> getUserReviewOnProduct(@PathVariable(value = "productId")
+    public ResponseEntity<ReviewDTO> getUserReviewOnProduct(@PathVariable(value = "productId")
                                                     @Valid
                                                     @NotNull
                                                     @Min(value = 1, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION) Long productId) {

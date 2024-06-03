@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut(value = "execution(public * it.academy.cursebackspring.services.*.*(..))")
+    @Pointcut(value = "execution(public * it.academy.cursebackspring.services.*.*(..)) ")
     private void publicMethodsFromServiceLayer() {
 
     }

@@ -31,6 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserService userService;
+    private final String ignorePattern = "/api/v1/auth/";
 
     @Override
     protected void doFilterInternal(
@@ -79,5 +80,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().print(e.getMessage());
         }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.contains(ignorePattern);
     }
 }

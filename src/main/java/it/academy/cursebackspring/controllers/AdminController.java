@@ -2,6 +2,7 @@ package it.academy.cursebackspring.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import it.academy.cursebackspring.dto.request.*;
+import it.academy.cursebackspring.dto.response.OrderItemsDTO;
 import it.academy.cursebackspring.dto.response.OrdersDTO;
 import it.academy.cursebackspring.dto.response.UsersDTO;
 import it.academy.cursebackspring.services.CategoryService;
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,14 +76,25 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/get/order/{orderId}/items")
+    public ResponseEntity<OrderItemsDTO> getOrderItems(@PathVariable(name = "orderId")
+                                                           @Valid
+                                                           @NotNull
+                                                           @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION) Long orderId,
+                                                           @Valid GetOrderItemsDTO dto) {
+        dto.setOrderId(orderId);
+        OrderItemsDTO orderItemsDTO = orderService.getOrderItems(dto);
+        return ResponseEntity.ok(orderItemsDTO);
+    }
+
     @GetMapping("/get/orders")
-    public ResponseEntity<?> getOrders(@Valid RequestDataDetailsDTO dto) {
+    public ResponseEntity<OrdersDTO> getOrders(@Valid RequestDataDetailsDTO dto) {
         OrdersDTO out = orderService.getListOfOrders(dto);
         return ResponseEntity.ok(out);
     }
 
     @GetMapping("/get/users")
-    public ResponseEntity<?> getUsers(@Valid RequestDataDetailsDTO dto) {
+    public ResponseEntity<UsersDTO> getUsers(@Valid RequestDataDetailsDTO dto) {
         UsersDTO usersDTO = userService.getUsersPage(dto);
         return ResponseEntity.ok(usersDTO);
     }

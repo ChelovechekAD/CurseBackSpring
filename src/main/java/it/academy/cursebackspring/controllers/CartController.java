@@ -58,7 +58,7 @@ public class CartController {
 
     @GetMapping
     @PreAuthorize(value = "#id == authentication.principal.id")
-    public ResponseEntity<?> getAllUserCart(@RequestParam(Constants.USER_ID_PARAM_KEY)
+    public ResponseEntity<CartItemsDTO> getAllUserCart(@RequestParam(Constants.USER_ID_PARAM_KEY)
                                             @Valid
                                             @NotNull
                                             @Min(value = Constants.MIN_USER_ID,

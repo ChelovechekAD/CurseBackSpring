@@ -10,7 +10,7 @@ spring:
       jwt:
         access-key:
           value: "gpgdKY9zR4hebFb2wT67AlgsKmbTOmKoyqmGym1dKmM="
-          expiration-time: 20
+          expiration-time: 1
         refresh-key:
           value: "7+bbUaAIaRFDce4rxQLu5QFPqooqHLgfN5mnDB7PNT4="
           expiration-time: 120

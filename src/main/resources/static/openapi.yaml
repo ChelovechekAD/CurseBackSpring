@@ -507,7 +507,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: object
+                $ref: '#/components/schemas/ReviewDTO'
   /api/v1/catalog/product/{productId}/:
     get:
       description: Allows you to view the product page with additional information
@@ -562,7 +562,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: object
+                $ref: '#/components/schemas/CartItemsDTO'
   /api/v1/admin/get/users:
     get:
       description: Allows you to obtain a list of all users
@@ -581,7 +581,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: object
+                $ref: '#/components/schemas/UsersDTO'
   /api/v1/admin/get/orders:
     get:
       description: Allows you to view all available orders
@@ -600,7 +600,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: object
+                $ref: "#/components/schemas/OrdersDTO"
   /api/v1/user/{userId}/delete:
     delete:
       description: Allows you to delete the user
@@ -1547,6 +1547,67 @@ components:
           minimum: 0
           type: integer
           format: int32
+    CartItemsDTO:
+      description: DTO with all user cart
+      required:
+        - cartItemDTOList
+      type: object
+      properties:
+        cartItemDTOList:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemDTO"
+    CartItemDTO:
+      description: DTO with an item information
+      required:
+        - quantity
+        - productId
+        - name
+        - imageLink
+        - price
+        - rating
+      type: object
+      properties:
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+        productId:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+          pattern: ^[A-zА-я0-9]{1,40}$
+        imageLink:
+          type: string
+        price:
+          description: Product price
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          format: double
+        rating:
+          minimum: 0
+          exclusiveMinimum: false
+          maximum: 10
+          exclusiveMaximum: false
+          type: number
+          format: double
+    UsersDTO:
+      required:
+        - userDTOList
+        - count
+      type: object
+      properties:
+        userDTOList:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDTO"
+        count:
+          type: integer
+          format: int64
+
   securitySchemes:
     Bearer-Authentication:
       type: http
