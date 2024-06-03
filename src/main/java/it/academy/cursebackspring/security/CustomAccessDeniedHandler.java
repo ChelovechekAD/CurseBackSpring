@@ -29,7 +29,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                     + " attempted to access the protected URL: "
                     + request.getRequestURI());
         }
-
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         var out = response.getOutputStream();
         new ObjectMapper().writeValue(out, "Access denied!");

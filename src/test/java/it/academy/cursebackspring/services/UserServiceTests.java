@@ -37,6 +37,35 @@ public class UserServiceTests {
     @InjectMocks
     UserServiceImpl userService;
 
+    private static Stream<Arguments> provideSaveUserData() {
+        return Stream.of(
+                Arguments.of(new User(1L, "123", "123", "Existed@email.com",
+                        "123", new Address(), "+3623", new HashSet<>()), false, "User already exist!"),
+                Arguments.of(new User(1L, "123", "123", "NewEmail@email.com",
+                        "123", new Address(), "+3623", new HashSet<>()), true, null)
+
+        );
+    }
+
+    private static Stream<Arguments> provideGetUserByIdData() {
+        return Stream.of(
+                Arguments.of(1L, true, null),
+                Arguments.of(2L, false, "User not found!")
+
+        );
+    }
+
+    private static Stream<Arguments> provideUpdateUserData() {
+        return Stream.of(
+                Arguments.of(new UpdateUserDTO(1L, "123", "123", "Email@email.com",
+                        "123", 123), true, null),
+                Arguments.of(new UpdateUserDTO(2L, "123", "123", "Email@email.com",
+                        "123", 123), false, "User not found!")
+
+
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideSaveUserData")
     public void saveUserTest(User user, boolean isValid, String message) {
@@ -95,7 +124,7 @@ public class UserServiceTests {
 
     @ParameterizedTest
     @MethodSource("provideGetUserByIdData")
-    public void getUserById(Long userId, boolean isValid, String message){
+    public void getUserById(Long userId, boolean isValid, String message) {
         User user = new User(1L, "123", "123", "Existed@email.com",
                 "123", new Address(), "+3623", new HashSet<>());
         when(userRepos.findById(any(Long.class))).then(invocation ->
@@ -113,33 +142,6 @@ public class UserServiceTests {
             Exception exception = Assertions.assertThrows(UserNotFoundException.class, () -> userService.getUserById(userId));
             Assertions.assertEquals(message, exception.getMessage());
         }
-    }
-
-    private static Stream<Arguments> provideSaveUserData() {
-        return Stream.of(
-                Arguments.of(new User(1L, "123", "123", "Existed@email.com",
-                        "123", new Address(), "+3623", new HashSet<>()), false, "User already exist!"),
-                Arguments.of(new User(1L, "123", "123", "NewEmail@email.com",
-                        "123", new Address(), "+3623", new HashSet<>()), true, null)
-
-        );
-    }
-    private static Stream<Arguments> provideGetUserByIdData() {
-        return Stream.of(
-                Arguments.of(1L, true, null),
-                Arguments.of(2L, false, "User not found!")
-
-        );
-    }
-    private static Stream<Arguments> provideUpdateUserData() {
-        return Stream.of(
-                Arguments.of(new UpdateUserDTO(1L, "123", "123", "Email@email.com",
-                        "123", 123), true, null),
-                Arguments.of(new UpdateUserDTO(2L, "123", "123", "Email@email.com",
-                        "123", 123), false, "User not found!")
-
-
-        );
     }
 
 }

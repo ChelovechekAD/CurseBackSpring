@@ -18,9 +18,6 @@ import it.academy.cursebackspring.repositories.OrderItemRepos;
 import it.academy.cursebackspring.repositories.ProductRepos;
 import it.academy.cursebackspring.repositories.specifications.ProductSpecification;
 import it.academy.cursebackspring.services.ProductService;
-import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,11 +26,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -129,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
         if (filters.size() > 0) {
             Specification<Product> spec = new ProductSpecification(filters.get(0));
             filters.remove(0);
-            for (ParamFilterDTO paramFilterDTO : filters){
+            for (ParamFilterDTO paramFilterDTO : filters) {
                 spec = spec.and(new ProductSpecification(paramFilterDTO));
             }
             products = productRepos.findAll(spec, pageRequest);
@@ -145,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
                 .filter(filterStr::contains)
                 .collect(Collectors.joining());
         String key = filterStr.substring(0, filterStr.indexOf(curOperation));
-        String value = filterStr.substring(filterStr.indexOf(curOperation)+1);
+        String value = filterStr.substring(filterStr.indexOf(curOperation) + 1);
         return new ParamFilterDTO(curOperation, key, value);
     }
 }

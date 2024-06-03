@@ -18,9 +18,6 @@ import it.academy.cursebackspring.models.User;
 import it.academy.cursebackspring.models.embedded.OrderItemPK;
 import it.academy.cursebackspring.repositories.*;
 import it.academy.cursebackspring.services.OrderService;
-import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,10 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j

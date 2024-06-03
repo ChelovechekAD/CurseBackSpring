@@ -18,7 +18,6 @@ import it.academy.cursebackspring.repositories.ProductRepos;
 import it.academy.cursebackspring.repositories.ReviewRepos;
 import it.academy.cursebackspring.repositories.UserRepos;
 import it.academy.cursebackspring.services.ReviewService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +25,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;

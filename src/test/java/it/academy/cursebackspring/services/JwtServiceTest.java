@@ -27,17 +27,23 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class JwtServiceTest {
 
+    @InjectMocks
+    JwtServiceImpl jwtService;
     @Mock
     private UserRepos userRepos;
-
     @Mock
     private RefreshTokenRepos refreshTokenRepos;
-
     @Mock
     private JwtUtils jwtUtils;
 
-    @InjectMocks
-    JwtServiceImpl jwtService;
+    private static Stream<Arguments> provideNewPairOfTokensData() {
+        return Stream.of(
+                Arguments.of(new User(1L, "123", "123", "email@email.com",
+                        "123", new Address(), "+3623", new HashSet<>()), true, null),
+                Arguments.of(new User(1L, "123", "123", "existedemail@test.ru",
+                        "123", new Address(), "+3623", new HashSet<>()), false, "User not found!")
+        );
+    }
 
     @ParameterizedTest
     @MethodSource("provideNewPairOfTokensData")
@@ -69,20 +75,11 @@ public class JwtServiceTest {
                             actualRefreshTokenObj.getUserEmail()
                     )
             );
-        }else {
+        } else {
             Exception exception = Assertions.assertThrows(UserNotFoundException.class,
-                    ()->jwtService.generateNewPairOfTokens(user));
+                    () -> jwtService.generateNewPairOfTokens(user));
             Assertions.assertEquals(message, exception.getMessage());
         }
-    }
-
-    private static Stream<Arguments> provideNewPairOfTokensData() {
-        return Stream.of(
-                Arguments.of(new User(1L, "123", "123", "email@email.com",
-                        "123", new Address(), "+3623", new HashSet<>()), true, null),
-                Arguments.of(new User(1L, "123", "123", "existedemail@test.ru",
-                        "123", new Address(), "+3623", new HashSet<>()), false, "User not found!")
-        );
     }
 
 }

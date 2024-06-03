@@ -13,19 +13,13 @@ import it.academy.cursebackspring.repositories.OrderItemRepos;
 import it.academy.cursebackspring.repositories.ProductRepos;
 import it.academy.cursebackspring.services.CategoryService;
 import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -44,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public void addCategory(String categoryName) {
-        if (categoryRepos.existsByCategoryName(categoryName)){
+        if (categoryRepos.existsByCategoryName(categoryName)) {
             throw new CategoryExistException();
         }
         Category category = Category.builder()
@@ -64,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public void deleteCategory(Long categoryId, Boolean root) {
-        if (!categoryRepos.existsById(categoryId)){
+        if (!categoryRepos.existsById(categoryId)) {
             throw new CategoryNotFoundException();
         }
         boolean prodExist = productRepos.existsProductByCategoryId(categoryId);
@@ -72,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
             if (!root) {
                 throw new CategoryDeleteException(Constants.CATEGORY_PRODUCT_EXIST_EXCEPTION_MESSAGE);
             }
-            if (orderItemRepos.existsByOrderItemPK_Product_CategoryId(categoryId)){
+            if (orderItemRepos.existsByOrderItemPK_Product_CategoryId(categoryId)) {
                 throw new ProductUsedInOrdersException();
             }
             productRepos.deleteAllByCategory_Id(categoryId);

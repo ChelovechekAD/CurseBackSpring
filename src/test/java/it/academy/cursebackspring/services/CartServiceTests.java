@@ -17,7 +17,6 @@ import it.academy.cursebackspring.services.impl.CartServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -45,6 +44,33 @@ public class CartServiceTests {
     @InjectMocks
     CartServiceImpl cartService;
 
+    private static Stream<Arguments> provideAddOrUpdateInCartData() {
+        return Stream.of(
+                Arguments.of(new AddOrUpdateItemInCartDTO(9, 1L, 1L), true, null, null),
+                Arguments.of(new AddOrUpdateItemInCartDTO(9, 2L, 1L), false,
+                        ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new AddOrUpdateItemInCartDTO(9, 1L, 2L), false,
+                        UserNotFoundException.class, "User not found!")
+        );
+    }
+
+    private static Stream<Arguments> provideGetAllCartByUserIdData() {
+        return Stream.of(
+                Arguments.of(1L, true, null),
+                Arguments.of(2L, false, "User not found!")
+        );
+    }
+
+    private static Stream<Arguments> provideDeleteItemFromCartData() {
+        return Stream.of(
+                Arguments.of(new DeleteItemFromCartDTO(1L, 1L), true, null, null),
+                Arguments.of(new DeleteItemFromCartDTO(2L, 1L), false,
+                        ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new DeleteItemFromCartDTO(1L, 2L), false,
+                        UserNotFoundException.class, "User not found!")
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideAddOrUpdateInCartData")
     public <T extends Exception> void addOrUpdateItemInCartTest(AddOrUpdateItemInCartDTO dto, boolean isValid,
@@ -68,7 +94,7 @@ public class CartServiceTests {
     @ParameterizedTest
     @MethodSource("provideDeleteItemFromCartData")
     public <T extends Exception> void deleteItemFromCart(DeleteItemFromCartDTO dto, boolean isValid,
-                                       Class<T> exClass, String message) {
+                                                         Class<T> exClass, String message) {
         when(productRepos.findById(any(Long.class))).then(invocation ->
                 (invocation.getArgument(0, Long.class) == 1L) ? Optional.of(new Product()) : Optional.empty());
         when(userRepos.findById(any(Long.class))).then(invocation ->
@@ -84,7 +110,7 @@ public class CartServiceTests {
 
     @ParameterizedTest
     @MethodSource("provideGetAllCartByUserIdData")
-    public void getAllCartByUserIdTest(Long userId, boolean isValid, String message){
+    public void getAllCartByUserIdTest(Long userId, boolean isValid, String message) {
         when(userRepos.existsById(any(Long.class))).then(invocation ->
                 invocation.getArgument(0, Long.class) == 1L);
         when(cartItemRepos.findCartItemsByCartItemPK_UserId(any(Long.class))).then(invocation ->
@@ -98,30 +124,5 @@ public class CartServiceTests {
                     () -> cartService.getAllCartByUserId(userId));
             Assertions.assertEquals(message, exception.getMessage());
         }
-    }
-
-    private static Stream<Arguments> provideAddOrUpdateInCartData() {
-        return Stream.of(
-                Arguments.of(new AddOrUpdateItemInCartDTO(9, 1L, 1L), true, null, null),
-                Arguments.of(new AddOrUpdateItemInCartDTO(9, 2L, 1L), false,
-                        ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new AddOrUpdateItemInCartDTO(9, 1L, 2L), false,
-                        UserNotFoundException.class, "User not found!")
-        );
-    }
-    private static Stream<Arguments> provideGetAllCartByUserIdData() {
-        return Stream.of(
-                Arguments.of(1L, true, null),
-                Arguments.of(2L, false, "User not found!")
-        );
-    }
-    private static Stream<Arguments> provideDeleteItemFromCartData() {
-        return Stream.of(
-                Arguments.of(new DeleteItemFromCartDTO( 1L, 1L), true, null, null),
-                Arguments.of(new DeleteItemFromCartDTO(2L, 1L), false,
-                        ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new DeleteItemFromCartDTO(1L, 2L), false,
-                        UserNotFoundException.class, "User not found!")
-        );
     }
 }

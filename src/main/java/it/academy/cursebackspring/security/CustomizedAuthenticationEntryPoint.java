@@ -13,6 +13,7 @@ public class CustomizedAuthenticationEntryPoint implements AuthenticationEntryPo
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         var out = response.getOutputStream();
         new ObjectMapper().writeValue(out, "Access denied!");

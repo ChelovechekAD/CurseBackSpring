@@ -12,9 +12,6 @@ import it.academy.cursebackspring.repositories.RoleRepos;
 import it.academy.cursebackspring.services.AuthService;
 import it.academy.cursebackspring.services.JwtService;
 import it.academy.cursebackspring.services.UserService;
-import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,9 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -47,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public void regUser(RegUserDTO regUserDTO) {
-        if (!regUserDTO.getPassword().equals(regUserDTO.getPasswordConfirm())){
+        if (!regUserDTO.getPassword().equals(regUserDTO.getPasswordConfirm())) {
             throw new PasswordMatchException();
         }
         User user = UserMapper.INSTANCE.toEntityFromRegDTO(regUserDTO);

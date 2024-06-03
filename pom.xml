@@ -185,6 +185,7 @@
                     <outputChangeLogFile>src\main\resources\db/generatedChangelog.yml</outputChangeLogFile>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 

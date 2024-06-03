@@ -54,10 +54,30 @@ public class AuthServiceTests {
     @InjectMocks
     AuthServiceImpl authService;
 
+    private static Stream<Arguments> provideRegUserData() {
+        return Stream.of(
+                Arguments.of(new RegUserDTO("email@email.ru", "Chelovek", "Default",
+                                "1234", "1234", null, null, null, "+1234"),
+                        true, null),
+                Arguments.of(new RegUserDTO("email@email.ru", "Chelovek", "Default",
+                                "1234", "1", null, null, null, "+1234"),
+                        false, "Password and password confirmation do not match!")
+        );
+    }
+
+    private static Stream<Arguments> provideLoginUserData() {
+        return Stream.of(
+                Arguments.of(new LoginUserDTO("email@email.ru", "Actual-password"),
+                        true, null),
+                Arguments.of(new LoginUserDTO("123@mail.ru", "Wrong-password"),
+                        false, "Password and password confirmation do not match!")
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideRegUserData")
     public void regUserTest(RegUserDTO regUserDTO, boolean isValid, String message) {
-        when(roleRepos.getByRole(RoleEnum.ROLE_DEFAULT_USER)).thenReturn(new Role((short)1, RoleEnum.ROLE_DEFAULT_USER));
+        when(roleRepos.getByRole(RoleEnum.ROLE_DEFAULT_USER)).thenReturn(new Role((short) 1, RoleEnum.ROLE_DEFAULT_USER));
         if (isValid) {
             ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
             authService.regUser(regUserDTO);
@@ -67,7 +87,7 @@ public class AuthServiceTests {
             Assertions.assertEquals(List.of(RoleEnum.ROLE_DEFAULT_USER, 1),
                     List.of(actualUser.getRoleSet().stream().toList().get(0).getRole(), actualUser.getRoleSet().size()));
         } else {
-            Exception exception = Assertions.assertThrows(PasswordMatchException.class, ()->authService.regUser(regUserDTO));
+            Exception exception = Assertions.assertThrows(PasswordMatchException.class, () -> authService.regUser(regUserDTO));
             Assertions.assertEquals(message, exception.getMessage());
         }
     }
@@ -87,28 +107,9 @@ public class AuthServiceTests {
             authService.loginUser(dto);
             verify(jwtService, times(1)).generateNewPairOfTokens(any(User.class));
         } else {
-            Exception exception = Assertions.assertThrows(PasswordMatchException.class, ()->authService.loginUser(dto));
+            Exception exception = Assertions.assertThrows(PasswordMatchException.class, () -> authService.loginUser(dto));
             Assertions.assertEquals(message, exception.getMessage());
         }
-    }
-
-    private static Stream<Arguments> provideRegUserData() {
-        return Stream.of(
-                Arguments.of(new RegUserDTO("email@email.ru", "Chelovek", "Default",
-                        "1234", "1234", null, null, null, "+1234"),
-                        true, null),
-                Arguments.of(new RegUserDTO("email@email.ru", "Chelovek", "Default",
-                        "1234", "1", null, null, null, "+1234"),
-                        false, "Password and password confirmation do not match!")
-        );
-    }
-    private static Stream<Arguments> provideLoginUserData() {
-        return Stream.of(
-                Arguments.of(new LoginUserDTO("email@email.ru", "Actual-password"),
-                        true, null),
-                Arguments.of(new LoginUserDTO("123@mail.ru", "Wrong-password"),
-                        false, "Password and password confirmation do not match!")
-        );
     }
 
 }

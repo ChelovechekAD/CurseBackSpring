@@ -28,6 +28,7 @@ spring:
     password: 973341
     user: JD2User
     change-log: classpath:/db/changelog/db.changelog-master.yaml
-
-
+springdoc:
+  swagger-ui:
+    url: /openapi.yaml
 

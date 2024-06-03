@@ -4,20 +4,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import it.academy.cursebackspring.dto.request.*;
 import it.academy.cursebackspring.dto.response.OrdersDTO;
 import it.academy.cursebackspring.dto.response.UsersDTO;
-import it.academy.cursebackspring.exceptions.RequestParamInvalidException;
 import it.academy.cursebackspring.services.CategoryService;
 import it.academy.cursebackspring.services.OrderService;
 import it.academy.cursebackspring.services.ProductService;
 import it.academy.cursebackspring.services.UserService;
 import it.academy.cursebackspring.utilities.Constants;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class AdminController {
         if (categoryName == null || categoryName.equals("")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Constants.CATEGORY_NAME_VALIDATION_EXCEPTION);
         }
-        categoryService.addCategory(categoryName);
+        categoryService.addCategory(categoryName.substring(1, categoryName.length() - 1));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -52,23 +51,25 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/category")
-    public ResponseEntity<?> deleteCategory(@RequestBody JsonNode params) {
-        long categoryId = params.get(Constants.CATEGORY_ID_PARAM_KEY).asLong();
-        if (categoryId <= 0) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Constants.CATEGORY_ID_VALIDATION_EXCEPTION);
-        }
-        boolean root = params.get(Constants.ROOT_PARAM_KEY).asBoolean();
+    @DeleteMapping("/delete/category/{categoryId}/{root}")
+    public ResponseEntity<?> deleteCategory(@PathVariable(name = "categoryId")
+                                            @Valid
+                                            @NotNull(message = Constants.CATEGORY_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+                                            @Min(value = Constants.MIN_CATEGORY_ID,
+                                                    message = Constants.CATEGORY_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+                                            Long categoryId,
+                                            @PathVariable(name = "root") boolean root) {
         categoryService.deleteCategory(categoryId, root);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/product")
-    public ResponseEntity<?> deleteProduct(@RequestBody JsonNode params) {
-        long productId = params.get(Constants.PRODUCT_ID_PARAM_KEY).asLong();
-        if (productId <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Constants.PRODUCT_ID_VALIDATION_EXCEPTION);
-        }
+    @DeleteMapping("/delete/product/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable
+                                           @Valid
+                                           @NotNull(message = Constants.PRODUCT_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+                                           @Min(value = Constants.MIN_PRODUCT_ID,
+                                                   message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION)
+                                           Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok().build();
     }
@@ -91,19 +92,28 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/order")
-    public ResponseEntity<?> deleteOrder(@RequestBody JsonNode params) {
-        long id = params.get(Constants.ORDER_ID_PARAM_KEY).asLong();
-        if (id <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Constants.ORDER_ID_VALIDATION_EXCEPTION);
-        }
+    @DeleteMapping("/delete/order/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable
+                                         @Valid
+                                         @NotNull(message = Constants.CATEGORY_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+                                         @Min(value = Constants.MIN_ORDER_ID,
+                                                 message = Constants.ORDER_ID_VALIDATION_EXCEPTION)
+                                         Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete/order/item")
-    public ResponseEntity<?> deleteOrder(@RequestBody @Valid DeleteOrderItemDTO dto) {
-        orderService.deleteOrderItem(dto);
+    public ResponseEntity<?> deleteOrderItem(
+            @RequestParam(name = Constants.PRODUCT_ID_PARAM_KEY)
+            @Valid
+            @NotNull(message = Constants.PRODUCT_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+            @Min(value = Constants.MIN_PRODUCT_ID, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION) Long productId,
+            @RequestParam(name = Constants.ORDER_ID_PARAM_KEY)
+            @Valid
+            @NotNull(message = Constants.ORDER_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
+            @Min(value = Constants.MIN_ORDER_ID, message = Constants.ORDER_ID_VALIDATION_EXCEPTION) Long orderId) {
+        orderService.deleteOrderItem(new DeleteOrderItemDTO(productId, orderId));
         return ResponseEntity.ok().build();
     }
 

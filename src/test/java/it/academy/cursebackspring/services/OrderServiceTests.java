@@ -53,6 +53,75 @@ public class OrderServiceTests {
     @InjectMocks
     OrderServiceImpl orderService;
 
+    private static Stream<Arguments> provideCreateOrderTestData() {
+        return Stream.of(
+                Arguments.of(new CreateOrderDTO(
+                                1L, List.of(new OrderItemDTO(1L, null, 9L, 2.2))),
+                        true, null, null),
+                Arguments.of(new CreateOrderDTO(
+                                1L, List.of(new OrderItemDTO(2L, null, 9L, 2.2))),
+                        false, ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new CreateOrderDTO(
+                                2L, List.of(new OrderItemDTO(1L, null, 9L, 2.2))),
+                        false, UserNotFoundException.class, "User not found!")
+
+        );
+    }
+
+    private static Stream<Arguments> provideChangeOrderStatusData() {
+        return Stream.of(
+                Arguments.of(new UpdateOrderStatusDTO(1L, OrderStatus.CANCELLED), true, null),
+                Arguments.of(new UpdateOrderStatusDTO(2L, OrderStatus.CANCELLED), false, "Order not found!")
+
+        );
+    }
+
+    private static Stream<Arguments> provideDeleteOrderData() {
+        return Stream.of(
+                Arguments.of(1L, true, null),
+                Arguments.of(2L, false, "Order not found!")
+
+        );
+    }
+
+    private static Stream<Arguments> provideGetListOfUserOrdersData() {
+        return Stream.of(
+                Arguments.of(new GetUserOrderPageDTO(0, 10, 1L), true, null),
+                Arguments.of(new GetUserOrderPageDTO(0, 10, 2L), false, "User not found!")
+
+        );
+    }
+
+    private static Stream<Arguments> provideGetOrderItemsData() {
+        return Stream.of(
+                Arguments.of(new GetOrderItemsDTO(0, 10, 1L), true, null),
+                Arguments.of(new GetOrderItemsDTO(0, 10, 2L), false, "Order not found!")
+
+        );
+    }
+
+    private static Stream<Arguments> provideDeleteOrderItemData() {
+        return Stream.of(
+                Arguments.of(new DeleteOrderItemDTO(1L, 1L), true, null, null),
+                Arguments.of(new DeleteOrderItemDTO(2L, 1L), false,
+                        ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new DeleteOrderItemDTO(1L, 2L), false,
+                        OrderNotFoundException.class, "Order not found!")
+
+        );
+    }
+
+    private static Stream<Arguments> provideAddOrUpdateOrderItemToOrderData() {
+        return Stream.of(
+                Arguments.of(new OrderItemDTO(1L, 1L, 1L, 2.2), true, null, null),
+                Arguments.of(new OrderItemDTO(2L, 1L, 1L, 2.2), false,
+                        ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new OrderItemDTO(1L, 2L, 1L, 2.2), false,
+                        OrderNotFoundException.class, "Order not found!")
+
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideCreateOrderTestData")
     public <T extends Exception> void createOrderTest(CreateOrderDTO dto, boolean isValid, Class<T> exClass, String message) {
@@ -87,7 +156,7 @@ public class OrderServiceTests {
             Assertions.assertEquals(List.of(expectedOrder, dto.getOrderStatus()),
                     List.of(actualOrder, actualOrder.getOrderStatus()));
         } else {
-            Exception exception = Assertions.assertThrows(OrderNotFoundException.class, ()->orderService.changeOrderStatus(dto));
+            Exception exception = Assertions.assertThrows(OrderNotFoundException.class, () -> orderService.changeOrderStatus(dto));
             Assertions.assertEquals(message, exception.getMessage());
         }
     }
@@ -100,7 +169,7 @@ public class OrderServiceTests {
             orderService.deleteOrder(orderId);
             verify(orderRepos, times(1)).deleteByOrderId(orderId);
         } else {
-            Exception exception = Assertions.assertThrows(OrderNotFoundException.class, ()->orderService.deleteOrder(orderId));
+            Exception exception = Assertions.assertThrows(OrderNotFoundException.class, () -> orderService.deleteOrder(orderId));
             Assertions.assertEquals(message, exception.getMessage());
         }
     }
@@ -120,12 +189,12 @@ public class OrderServiceTests {
         when(userRepos.existsById(dto.getUserId())).then(invocation -> invocation.getArgument(0, Long.class) == 1L);
         when(orderRepos.getOrdersByUserId(any(Long.class), any(PageRequest.class)))
                 .thenReturn(new PageImpl<>(List.of(new Order(), new Order())));
-        if(isValid){
+        if (isValid) {
             OrdersDTO actualOut = orderService.getListOfUserOrders(dto);
             Assertions.assertEquals(List.of(2L, 2),
                     List.of(actualOut.getCount(), actualOut.getOrderList().size()));
         } else {
-            Exception exception = Assertions.assertThrows(UserNotFoundException.class, ()->orderService.getListOfUserOrders(dto));
+            Exception exception = Assertions.assertThrows(UserNotFoundException.class, () -> orderService.getListOfUserOrders(dto));
             Assertions.assertEquals(message, exception.getMessage());
         }
     }
@@ -136,13 +205,13 @@ public class OrderServiceTests {
         when(orderRepos.existsById(dto.getOrderId())).then(invocation -> invocation.getArgument(0, Long.class) == 1L);
         when(orderItemRepos.getOrderItemsPageByOrderItemPK_OrderId(any(Long.class), any(PageRequest.class)))
                 .thenReturn(new PageImpl<>(List.of(new OrderItem(), new OrderItem())));
-        if(isValid){
+        if (isValid) {
             OrderItemsDTO actualOut = orderService.getOrderItems(dto);
             Assertions.assertEquals(List.of(2L, 2),
                     List.of(actualOut.getTotalCountOfItems(), actualOut.getOrderItemProductDTOList().size()));
         } else {
             Exception exception = Assertions.assertThrows(OrderNotFoundException.class,
-                    ()->orderService.getOrderItems(dto));
+                    () -> orderService.getOrderItems(dto));
             Assertions.assertEquals(message, exception.getMessage());
         }
     }
@@ -182,71 +251,6 @@ public class OrderServiceTests {
             Exception exception = Assertions.assertThrows(exClass, () -> orderService.addOrUpdateOrderItemToOrder(dto));
             Assertions.assertEquals(message, exception.getMessage());
         }
-    }
-
-
-    private static Stream<Arguments> provideCreateOrderTestData() {
-        return Stream.of(
-                Arguments.of(new CreateOrderDTO(
-                                1L, List.of(new OrderItemDTO(1L, null, 9L, 2.2))),
-                        true, null, null),
-                Arguments.of(new CreateOrderDTO(
-                                1L, List.of(new OrderItemDTO(2L, null, 9L, 2.2))),
-                        false, ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new CreateOrderDTO(
-                                2L, List.of(new OrderItemDTO(1L, null, 9L, 2.2))),
-                        false, UserNotFoundException.class, "User not found!")
-
-        );
-    }
-    private static Stream<Arguments> provideChangeOrderStatusData() {
-        return Stream.of(
-                Arguments.of(new UpdateOrderStatusDTO(1L, OrderStatus.CANCELLED), true, null),
-                Arguments.of(new UpdateOrderStatusDTO(2L, OrderStatus.CANCELLED), false, "Order not found!")
-
-        );
-    }
-    private static Stream<Arguments> provideDeleteOrderData() {
-        return Stream.of(
-                Arguments.of(1L, true, null),
-                Arguments.of(2L, false, "Order not found!")
-
-        );
-    }
-    private static Stream<Arguments> provideGetListOfUserOrdersData() {
-        return Stream.of(
-                Arguments.of(new GetUserOrderPageDTO(0, 10, 1L), true, null),
-                Arguments.of(new GetUserOrderPageDTO(0, 10, 2L), false, "User not found!")
-
-        );
-    }
-    private static Stream<Arguments> provideGetOrderItemsData() {
-        return Stream.of(
-                Arguments.of(new GetOrderItemsDTO(0, 10, 1L), true, null),
-                Arguments.of(new GetOrderItemsDTO(0, 10, 2L), false, "Order not found!")
-
-        );
-    }
-
-    private static Stream<Arguments> provideDeleteOrderItemData() {
-        return Stream.of(
-                Arguments.of(new DeleteOrderItemDTO(1L, 1L), true, null, null),
-                Arguments.of(new DeleteOrderItemDTO(2L, 1L), false,
-                        ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new DeleteOrderItemDTO(1L, 2L), false,
-                        OrderNotFoundException.class, "Order not found!")
-
-        );
-    }
-    private static Stream<Arguments> provideAddOrUpdateOrderItemToOrderData() {
-        return Stream.of(
-                Arguments.of(new OrderItemDTO(1L, 1L, 1L, 2.2), true, null, null),
-                Arguments.of(new OrderItemDTO(2L, 1L, 1L, 2.2), false,
-                        ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new OrderItemDTO(1L, 2L, 1L, 2.2), false,
-                        OrderNotFoundException.class, "Order not found!")
-
-        );
     }
 
 }

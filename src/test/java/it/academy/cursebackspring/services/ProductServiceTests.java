@@ -48,6 +48,50 @@ public class ProductServiceTests {
     @InjectMocks
     ProductServiceImpl productService;
 
+    private static Stream<Arguments> provideGetAllExistProductsData() {
+        return Stream.of(
+                Arguments.of(new GetProductPageDTO(10, 1, null, "name:P1")),
+                Arguments.of(new GetProductPageDTO(10, 1, "category=1", null)),
+                Arguments.of(new GetProductPageDTO(10, 1, null, null))
+
+        );
+    }
+
+    private static Stream<Arguments> provideDeleteProductData() {
+        return Stream.of(
+                Arguments.of(1L, true, null),
+                Arguments.of(2L, false, "This product already used in order(s)")
+
+        );
+    }
+
+    private static Stream<Arguments> provideGetProductByIdData() {
+        return Stream.of(
+                Arguments.of(1L, true, null),
+                Arguments.of(2L, false, "Product not found.")
+
+        );
+    }
+
+    private static Stream<Arguments> provideUpdateProductData() {
+        return Stream.of(
+                Arguments.of(new UpdateProductDTO(1L, 1L, "JohnDoe", "Description",
+                        2.2, "image.png"), true, null, null),
+                Arguments.of(new UpdateProductDTO(1L, 2L, "JohnDoe", "Description",
+                        2.2, "image.png"), false, "Requested catalog not exist.", CategoryNotFoundException.class),
+                Arguments.of(new UpdateProductDTO(2L, 1L, "JohnDoe", "Description",
+                        2.2, "image.png"), false, "Product not found.", ProductNotFoundException.class)
+        );
+    }
+
+    private static Stream<Arguments> provideProductData() {
+        return Stream.of(
+                Arguments.of(new CreateProductDTO(1L, "JohnDoe", "Description",
+                        2.2, "image.png"), true, ""),
+                Arguments.of(new CreateProductDTO(2L, "JohnDoe", "Description",
+                        2.2, "image.png"), false, "Requested catalog not exist.")
+        );
+    }
 
     @ParameterizedTest
     @MethodSource("provideProductData")
@@ -144,55 +188,10 @@ public class ProductServiceTests {
         ProductsDTO productsDTO = productService.getAllExistProducts(dto);
         if (dto.getNameFilter() != null || dto.getCategoryFilter() != null) {
             Assertions.assertEquals(1, productsDTO.getCountOfProducts());
-        }else {
+        } else {
             Assertions.assertEquals(2, productsDTO.getCountOfProducts());
         }
 
-    }
-
-    private static Stream<Arguments> provideGetAllExistProductsData() {
-        return Stream.of(
-                Arguments.of(new GetProductPageDTO(10, 1, null, "name:P1")),
-                Arguments.of(new GetProductPageDTO(10, 1, "category=1", null)),
-                Arguments.of(new GetProductPageDTO(10, 1, null, null))
-
-        );
-    }
-
-    private static Stream<Arguments> provideDeleteProductData() {
-        return Stream.of(
-                Arguments.of(1L, true, null),
-                Arguments.of(2L, false, "This product already used in order(s)")
-
-        );
-    }
-
-    private static Stream<Arguments> provideGetProductByIdData() {
-        return Stream.of(
-                Arguments.of(1L, true, null),
-                Arguments.of(2L, false, "Product not found.")
-
-        );
-    }
-
-    private static Stream<Arguments> provideUpdateProductData() {
-        return Stream.of(
-                Arguments.of(new UpdateProductDTO(1L, 1L, "JohnDoe", "Description",
-                        2.2, "image.png"), true, null, null),
-                Arguments.of(new UpdateProductDTO(1L, 2L, "JohnDoe", "Description",
-                        2.2, "image.png"), false, "Requested catalog not exist.", CategoryNotFoundException.class),
-                Arguments.of(new UpdateProductDTO(2L, 1L, "JohnDoe", "Description",
-                        2.2, "image.png"), false, "Product not found.", ProductNotFoundException.class)
-        );
-    }
-
-    private static Stream<Arguments> provideProductData() {
-        return Stream.of(
-                Arguments.of(new CreateProductDTO(1L, "JohnDoe", "Description",
-                        2.2, "image.png"), true, ""),
-                Arguments.of(new CreateProductDTO(2L, "JohnDoe", "Description",
-                        2.2, "image.png"), false, "Requested catalog not exist.")
-        );
     }
 
 }

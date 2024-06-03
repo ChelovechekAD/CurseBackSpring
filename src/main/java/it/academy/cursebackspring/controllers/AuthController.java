@@ -5,7 +5,6 @@ import it.academy.cursebackspring.dto.request.RegUserDTO;
 import it.academy.cursebackspring.dto.response.LoginUserJwtDTO;
 import it.academy.cursebackspring.services.AuthService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

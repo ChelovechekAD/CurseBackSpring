@@ -1,0 +1,1554 @@
+openapi: 3.0.1
+info:
+  title: My REST API
+  description: Some custom description of API.
+  contact:
+    name: Artem Yushkevich
+    url: ''
+    email: yushkevich@mail.ru
+  license:
+    name: License of API
+    url: http://
+  version: '1.0'
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+security:
+  - Bearer-Authentication: [ ]
+paths:
+  /api/v1/user/{userId}/update:
+    put:
+      tags:
+        - User controller
+      operationId: updateUserInfo
+      description: Allows you to update user info such as name, surname, city, street or building.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/update/product:
+    put:
+      description: Allows you to update an existing product
+      tags:
+        - Admin controller
+      operationId: updateProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/update/order:
+    put:
+      description: Allows you to update the order status of an existing order
+      tags:
+        - Admin controller
+      operationId: updateOrderStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/update/order/item:
+    put:
+      description: Allows you to update the item of an existing order
+      tags:
+        - Admin controller
+      operationId: updateOrderItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/update/category:
+
+    put:
+      description: Allows you to update a existing category
+      tags:
+        - Admin controller
+      operationId: updateCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/catalog/product/{productId}/reviews/create:
+
+    post:
+      description: Allows the user to create new review on the product
+      tags:
+        - Product controller
+      operationId: createNewReview
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/cart/add/item:
+
+    post:
+      description: Allows the user to add an item to their own shopping cart
+      tags:
+        - Cart controller
+      operationId: addItemToCart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOrUpdateItemInCartDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/cart/update/item:
+
+    post:
+      description: Allows the user to update the item in their own shopping cart
+      tags:
+        - Cart controller
+      operationId: addItemToCart_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOrUpdateItemInCartDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/cart/add/order:
+
+    post:
+      description: Allows the user to create an order based on their shopping cart
+      tags:
+        - Cart controller
+      operationId: addNewOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/auth/registration:
+
+    post:
+      description: Allows you to create a new account
+      tags:
+        - Auth controller
+      operationId: reg
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/auth/refresh:
+    post:
+      description: Allows the user to update their access token if the refresh token stored in the cookie has not expired and is valid
+      tags:
+        - Auth controller
+      operationId: refresh
+      parameters:
+        - name: refresh-token
+          in: cookie
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/auth/logout:
+    post:
+      description: Allows the user to log out of the account
+      tags:
+        - Auth controller
+      operationId: logout
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/auth/login:
+    post:
+      description: Allows you to log into your account and obtain an access token for future requests to secure resources
+      tags:
+        - Auth controller
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/add/product:
+    post:
+      description: Allows you to add a new product
+      tags:
+        - Admin controller
+      operationId: addProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/add/order/item:
+    post:
+      description: Allows you to add a new order item to an existing order
+      tags:
+        - Admin controller
+      operationId: addItemToOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderItemDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/add/category:
+    post:
+      description: Allows you to add a new category
+      tags:
+        - Admin controller
+      operationId: addCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JsonNode'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/user/{userId}:
+    get:
+      description: Allows you to retrieve user information by user ID
+      tags:
+        - User controller
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /api/v1/user/{userId}/reviews:
+    get:
+      description: Allows you to retrieve user reviews by user ID
+      tags:
+        - User controller
+      operationId: getUserReviews
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: dto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/GetUserReviewsDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserReviewsDTO'
+  /api/v1/user/{userId}/orders:
+    get:
+      description: Allow you to retrieve user orders by user ID
+      tags:
+        - User controller
+      operationId: getUserOrders
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: dto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/GetUserOrderPageDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrdersDTO'
+  /api/v1/user/{userId}/orders/{orderId}/items:
+    get:
+      description: Allows you to retrieve all order items in the order by order ID
+      tags:
+        - User controller
+      operationId: getUserOrderItems
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: dto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/GetOrderItemsDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrderItemsDTO'
+  /api/v1/catalog/products:
+    get:
+      description: Allows you to get a page with products
+      tags:
+        - Catalog controller
+      operationId: getProductPage
+      parameters:
+        - name: dto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/GetProductPageDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProductsDTO'
+  /api/v1/catalog/product/{productId}/reviews:
+    get:
+      description: Allows you to retrieve all reviews for a product by their ID
+      tags:
+        - Product controller
+      operationId: getProductReviewsById
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: dto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/GetReviewsDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ReviewsDTO'
+  /api/v1/catalog/product/{productId}/reviews/user_review:
+    get:
+      description: Allows you to view user reviews for a product, if available
+      tags:
+        - Product controller
+      operationId: getUserReviewOnProduct
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/catalog/product/{productId}/:
+    get:
+      description: Allows you to view the product page with additional information
+      tags:
+        - Product controller
+      operationId: getProductById
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProductDTO'
+  /api/v1/catalog/categories:
+    get:
+      description: Allows you to view all available categories
+      tags:
+        - Catalog controller
+      operationId: getAllCategories
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CategoriesDTO'
+  /api/v1/cart/:
+    get:
+      description: Allows you to add a new item to the cart
+      tags:
+        - Cart controller
+      operationId: getAllUserCart
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/get/users:
+    get:
+      description: Allows you to obtain a list of all users
+      tags:
+        - Admin controller
+      operationId: getUsers
+      parameters:
+        - name: dto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/RequestDataDetailsDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/get/orders:
+    get:
+      description: Allows you to view all available orders
+      tags:
+        - Admin controller
+      operationId: getOrders
+      parameters:
+        - name: dto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/RequestDataDetailsDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/user/{userId}/delete:
+    delete:
+      description: Allows you to delete the user
+      tags:
+        - User controller
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/catalog/product/{productId}/reviews/delete:
+    delete:
+      description: Allows you to delete your own review
+      tags:
+        - Product controller
+      operationId: deleteReview
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/cart/delete/item:
+    delete:
+      description: Allows you to remove the item from your shopping cart
+      tags:
+        - Cart controller
+      operationId: deleteItemFromCart
+      parameters:
+        - name: productId
+          in: query
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: userId
+          in: query
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/delete/product/{productId}:
+    delete:
+      description: Allows you to delete a product by their ID
+      tags:
+        - Admin controller
+      operationId: deleteProduct
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/delete/order/{id}:
+    delete:
+      description: Allows you to delete an order by their ID
+      tags:
+        - Admin controller
+      operationId: deleteOrder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/delete/order/item:
+    delete:
+      description: Allows you to delete an order item from an order
+      tags:
+        - Admin controller
+      operationId: deleteOrderItem
+      parameters:
+        - name: productId
+          in: query
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: orderId
+          in: query
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/admin/delete/category/{categoryId}/{root}:
+    delete:
+      description: This function allows you to delete a category by its ID. If this category is used by any products, you must use the root flag to delete the category with all products. However, if any of these products are used in orders, the root flag will not help you to delete the category.
+      tags:
+        - Admin controller
+      operationId: deleteCategory
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+        - name: root
+          in: path
+          required: true
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+components:
+  schemas:
+    UpdateUserDTO:
+      description: New user data
+      required:
+        - building
+        - city
+        - id
+        - name
+        - street
+        - surname
+      type: object
+      properties:
+        id:
+          default: 1
+          description: Target user ID
+          minimum: 1
+          type: integer
+          format: int64
+        name:
+          type: string
+          default: "New name"
+          description: New user name
+        surname:
+          type: string
+          default: "New surname"
+          description: New user surname
+        city:
+          default: "New city"
+          description: New user city
+          type: string
+        street:
+          default: "New street"
+          description: New user street
+          type: string
+        building:
+          default: 123
+          description: New user building
+          maximum: 1000
+          minimum: 1
+          type: integer
+          format: int32
+    UpdateProductDTO:
+      description: New product data
+      required:
+        - categoryId
+        - description
+        - id
+        - imageLink
+        - name
+        - price
+      type: object
+      properties:
+        id:
+          minimum: 1
+          description: Targer product ID
+          default: 1
+          type: integer
+          format: int64
+        categoryId:
+          default: 1
+          description: Identifier of the associated category
+          minimum: 1
+          type: integer
+          format: int64
+        name:
+          description: New name of the product
+          default: "New product name"
+          pattern: ^[A-zА-я0-9]{1,40}$
+          type: string
+        description:
+          description: New product description
+          type: string
+        price:
+          default: 2.2
+          description: New product price
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          format: double
+        imageLink:
+          default: /not-found-404.jpg
+          description: New product image link
+          type: string
+    UpdateOrderStatusDTO:
+      description: Updating the status of an existing order
+      required:
+        - orderId
+        - orderStatus
+      type: object
+      properties:
+        orderId:
+          default: 1
+          description: Target Order ID
+          minimum: 1
+          type: integer
+          format: int64
+        orderStatus:
+          default: CANCELLED
+          description: New order status
+          type: string
+          enum:
+            - PENDING
+            - PROCESSING
+            - SHIPPED
+            - DELIVERED
+            - CANCELLED
+    OrderItemDTO:
+      description: Required data for adding a new or updating an existing order item
+      required:
+        - price
+        - productId
+        - quantity
+      type: object
+      properties:
+        productId:
+          default: 1
+          description: Product ID
+          minimum: 1
+          type: integer
+          format: int64
+        orderId:
+          default: 1
+          description: Order ID
+          type: integer
+          format: int64
+        quantity:
+          default: 5
+          description: Quantity of the item
+          minimum: 1
+          type: integer
+          format: int64
+        price:
+          default: 5
+          description: Total price for all items of this type
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          format: double
+    UpdateCategoryDTO:
+      description: New category data
+      required:
+        - categoryId
+        - categoryName
+      type: object
+      properties:
+        categoryId:
+          default: 1
+          description: Target category ID
+          minimum: 1
+          type: integer
+          format: int64
+        categoryName:
+          default: "New category name"
+          description: New category name
+          type: string
+    CreateReviewDTO:
+      description: Review data for creating a new review
+      required:
+        - description
+        - rating
+        - userId
+      type: object
+      properties:
+        description:
+          default: "Description"
+          description: Review details
+          type: string
+        rating:
+          default: 5
+          description: Review rating
+          maximum: 10
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          format: double
+        productId:
+          default: 1
+          description: Target product ID
+          type: integer
+          format: int64
+        userId:
+          default: 1
+          description: User ID who created the review
+          minimum: 1
+          type: integer
+          format: int64
+    AddOrUpdateItemInCartDTO:
+      description: Required data for adding a new or updating an existing item in the cart
+      required:
+        - productId
+        - quantity
+        - userId
+      type: object
+      properties:
+        quantity:
+          default: 5
+          description: Quantity of the item
+          minimum: 1
+          type: integer
+          format: int32
+        productId:
+          default: 1
+          description: Target product ID
+          minimum: 1
+          type: integer
+          format: int64
+        userId:
+          default: 1
+          description: ID of the user for whom the shopping cart is updated
+          minimum: 1
+          type: integer
+          format: int64
+    CreateOrderDTO:
+      description: Required data for creating a new order
+      required:
+        - orderItems
+        - userId
+      type: object
+      properties:
+        userId:
+          default: 1
+          description: User ID who is trying to create the order
+          minimum: 1
+          type: integer
+          format: int64
+        orderItems:
+          description: Included order items
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemDTO'
+    RegUserDTO:
+      description: Required data for reg a new user
+      required:
+        - email
+        - name
+        - password
+        - passwordConfirm
+        - phoneNumber
+        - surname
+      type: object
+      properties:
+        email:
+          pattern: ^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$
+          type: string
+          description: User email
+          default: "test@test.test"
+        name:
+          type: string
+          description: User name
+          default: "Name"
+        surname:
+          type: string
+          description: User surname
+          default: "Surname"
+        password:
+          type: string
+          description: New user password
+          default: '1234'
+        passwordConfirm:
+          type: string
+          description: Password confirmation
+          default: '1234'
+        city:
+          type: string
+          description: User city
+          default: "City"
+        street:
+          type: string
+          description: User street
+          default: "Street"
+        building:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          description: User building
+          format: int32
+          default: 123
+        phoneNumber:
+          pattern: ^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$
+          type: string
+          description: User phone number
+          default: "+123 12 23234"
+    LoginUserDTO:
+      description: Required data for logging in
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          pattern: ^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$
+          type: string
+          description: User email
+          default: "test@test.test"
+        password:
+          type: string
+          description: User password
+          default: '1234'
+    CreateProductDTO:
+      description: Required data for creating a new product
+      required:
+        - categoryId
+        - description
+        - imageLink
+        - name
+        - price
+      type: object
+      properties:
+        categoryId:
+          description: Target category ID
+          default: 1
+          minimum: 1
+          type: integer
+          format: int64
+        name:
+          default: "Product name"
+          description: Product name
+          pattern: ^[A-zА-я0-9]{1,40}$
+          type: string
+        description:
+          default: "Product description"
+          description: Product description
+          type: string
+        price:
+          default: 2.2
+          description: Product price
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          format: double
+        imageLink:
+          default: "/not-found-404.jpg"
+          description: Product image link
+          type: string
+    JsonNode:
+      type: object
+    UserDTO:
+      description: User data
+      required:
+        - id
+        - name
+        - phoneNumber
+        - roles
+        - surname
+      type: object
+      properties:
+        id:
+          description: User ID
+          minimum: 1
+          type: integer
+          format: int64
+        building:
+          description: User building
+          type: string
+        city:
+          description: User city
+          type: string
+        street:
+          description: User street
+          type: string
+        email:
+          description: User email
+          type: string
+        name:
+          description: User name
+          type: string
+        phoneNumber:
+          description: User phone number
+          pattern: ^\+?(\d{1,3})?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$
+          type: string
+        surname:
+          description: User surname
+          type: string
+        roles:
+          description: User roles
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    GetUserReviewsDTO:
+      description: Required data for user feedback on a page-by-page basis
+      required:
+        - countPerPage
+        - pageNum
+        - userId
+      type: object
+      properties:
+        pageNum:
+          default: 1
+          description: Num of the page
+          minimum: 0
+          type: integer
+          format: int32
+        countPerPage:
+          default: 10
+          description: Number of elements on the page
+          minimum: 10
+          type: integer
+          format: int32
+        userId:
+          default: 1
+          description: Target user ID
+          minimum: 1
+          type: integer
+          format: int64
+    UserReviewInfoDTO:
+      description: User review information
+      required:
+        - description
+        - imageLink
+        - productId
+        - rating
+      type: object
+      properties:
+        description:
+          description: Review details
+          type: string
+        rating:
+          description: Review rating
+          maximum: 10
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          format: double
+        productId:
+          description: Product ID
+          minimum: 1
+          type: integer
+          format: int64
+        imageLink:
+          description: Product image link
+          type: string
+        name:
+          description: Product name
+          pattern: ^[A-zА-я0-9]{1,40}$
+          type: string
+    UserReviewsDTO:
+      description: List of user reviews with the total number of reviews of this user in the database
+      required:
+        - countOf
+        - reviews
+      type: object
+      properties:
+        reviews:
+          description: List of user reviews
+          type: array
+          items:
+            $ref: '#/components/schemas/UserReviewInfoDTO'
+        countOf:
+          description: Total number of user reviews
+          minimum: 0
+          type: integer
+          format: int64
+    GetUserOrderPageDTO:
+      description: Required data for getting the user orders on a page-by-page basis
+      required:
+        - countPerPage
+        - pageNum
+        - userId
+      type: object
+      properties:
+        pageNum:
+          description: Num of the page
+          default: 0
+          minimum: 0
+          type: integer
+          format: int32
+        countPerPage:
+          default: 10
+          description: Number of elements on the page
+          minimum: 10
+          type: integer
+          format: int32
+        userId:
+          default: 1
+          description: Target User ID
+          minimum: 1
+          type: integer
+          format: int64
+    OrderDTO:
+      description: Order information
+      required:
+        - countOfItems
+        - date
+        - id
+        - orderStatus
+      type: object
+      properties:
+        id:
+          description: Order ID
+          minimum: 1
+          type: integer
+          format: int64
+        date:
+          description: Date of order creation
+          type: string
+          format: date-time
+        orderStatus:
+          description: Order status
+          type: string
+          enum:
+            - PENDING
+            - PROCESSING
+            - SHIPPED
+            - DELIVERED
+            - CANCELLED
+        countOfItems:
+          description: Count of different products in an order
+          minimum: 0
+          type: integer
+          format: int64
+    OrdersDTO:
+      description: Contains a list of orders and the total number of orders in the database
+      required:
+        - count
+        - orderList
+      type: object
+      properties:
+        orderList:
+          description: Order list
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderDTO'
+        count:
+          description: Total number of orders in the database
+          minimum: 0
+          type: integer
+          format: int64
+    GetOrderItemsDTO:
+      description: Required data for receipt of all items which order contains
+      required:
+        - countPerPage
+        - orderId
+        - pageNum
+      type: object
+      properties:
+        pageNum:
+          default: 0
+          description: Page number
+          minimum: 0
+          type: integer
+          format: int32
+        countPerPage:
+          default: 10
+          description: Number of elements on the page
+          minimum: 10
+          type: integer
+          format: int32
+        orderId:
+          default: 1
+          description: Target Order ID
+          minimum: 1
+          type: integer
+          format: int64
+    OrderItemProductDTO:
+      description: Information about the product that is included in the order
+      required:
+        - count
+        - imageLink
+        - name
+        - price
+        - productId
+      type: object
+      properties:
+        productId:
+          description: Target product ID
+          minimum: 1
+          type: integer
+          format: int64
+        count:
+          description: Product count
+          minimum: 0
+          type: integer
+          format: int64
+        price:
+          description: Product price
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          format: double
+        name:
+          description: Product name
+          pattern: ^[A-zА-я0-9]{1,40}$
+          type: string
+        imageLink:
+          description: Product image link
+          type: string
+    OrderItemsDTO:
+      required:
+        - orderItemProductDTOList
+        - totalCountOfItems
+      type: object
+      properties:
+        orderItemProductDTOList:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemProductDTO'
+        totalCountOfItems:
+          minimum: 0
+          type: integer
+          format: int64
+    GetProductPageDTO:
+      description: Required data for obtaining products by page
+      required:
+        - countPerPage
+        - pageNum
+      type: object
+      properties:
+        countPerPage:
+          default: 10
+          description: Number of elements on the page
+          minimum: 10
+          type: integer
+          format: int32
+        pageNum:
+          default: 1
+          description: Page number
+          minimum: 0
+          type: integer
+          format: int32
+        categoryFilter:
+          description: Category ID for products filtering
+          example: "category=1"
+          type: string
+        nameFilter:
+          description: Name of product(s) for filtering
+          example: "name:Test"
+          type: string
+    ProductDTO:
+      description: Product data
+      required:
+        - categoryId
+        - description
+        - id
+        - imageLink
+        - name
+        - price
+      type: object
+      properties:
+        id:
+          description: Product ID
+          minimum: 1
+          type: integer
+          format: int64
+        categoryId:
+          description: Category ID
+          minimum: 1
+          type: integer
+          format: int64
+        name:
+          description: Product name
+          pattern: ^[A-zА-я0-9]{1,40}$
+          type: string
+        description:
+          description: Product description
+          type: string
+        price:
+          description: Product price
+          minimum: 0.01
+          exclusiveMinimum: false
+          type: number
+          format: double
+        imageLink:
+          description: Product image link
+          type: string
+        rating:
+          description: Product rating
+          type: number
+          format: double
+    ProductsDTO:
+      required:
+        - productDTOList
+      type: object
+      properties:
+        productDTOList:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDTO'
+        countOfProducts:
+          minimum: 0
+          type: integer
+          format: int64
+    GetReviewsDTO:
+      required:
+        - countPerPage
+        - pageNum
+      type: object
+      properties:
+        pageNum:
+          minimum: 0
+          type: integer
+          format: int32
+        countPerPage:
+          minimum: 10
+          type: integer
+          format: int32
+        productId:
+          type: integer
+          format: int64
+    ReviewDTO:
+      required:
+        - description
+        - name
+        - rating
+        - surname
+        - userId
+      type: object
+      properties:
+        userId:
+          minimum: 1
+          type: integer
+          format: int64
+        name:
+          type: string
+        surname:
+          type: string
+        description:
+          type: string
+        rating:
+          maximum: 10
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          format: double
+    ReviewsDTO:
+      required:
+        - countOfReviews
+        - reviewDTOList
+      type: object
+      properties:
+        reviewDTOList:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewDTO'
+        countOfReviews:
+          minimum: 0
+          type: integer
+          format: int64
+    CategoriesDTO:
+      required:
+        - categoryDTOList
+      type: object
+      properties:
+        categoryDTOList:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryDTO'
+    CategoryDTO:
+      required:
+        - categoryId
+        - categoryName
+      type: object
+      properties:
+        categoryId:
+          minimum: 1
+          type: integer
+          format: int64
+        categoryName:
+          type: string
+    RequestDataDetailsDTO:
+      description: Request details like page num and number of elements on the page
+      required:
+        - countPerPage
+        - pageNum
+      type: object
+      properties:
+        countPerPage:
+          default: 10
+          minimum: 10
+          type: integer
+          format: int32
+        pageNum:
+          default: 0
+          minimum: 0
+          type: integer
+          format: int32
+  securitySchemes:
+    Bearer-Authentication:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

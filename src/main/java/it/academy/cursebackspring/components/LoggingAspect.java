@@ -28,7 +28,7 @@ public class LoggingAspect {
             Object result = joinPoint.proceed();
             log.info("<< Method successfully end: {}() - {}", methodName, result);
             return result;
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             log.error("Error: {}", e.getLocalizedMessage(), e);
             throw e;
         }

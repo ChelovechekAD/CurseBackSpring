@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -57,8 +55,8 @@ public class JwtServiceImpl implements JwtService {
      */
 
     private void saveRefreshToken(@Valid @Email String email,
-                                 @Valid @NotBlank(message = Constants.TOKEN_MUST_NOT_BE_BLANK_VALIDATION_EXCEPTION) String token) {
-        if (!userRepos.existsUserByEmail(email)){
+                                  @Valid @NotBlank(message = Constants.TOKEN_MUST_NOT_BE_BLANK_VALIDATION_EXCEPTION) String token) {
+        if (!userRepos.existsUserByEmail(email)) {
             throw new UserNotFoundException();
         }
         refreshTokenRepos.save(JwtMapper.INSTANCE.createEntity(email, token));

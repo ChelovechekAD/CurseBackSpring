@@ -47,6 +47,47 @@ public class ReviewServiceTests {
     @InjectMocks
     ReviewServiceImpl reviewService;
 
+    private static Stream<Arguments> provideCreateReviewData() {
+        return Stream.of(
+                Arguments.of(new CreateReviewDTO("1", 2.2, 1L, 1L), true,
+                        null, null),
+                Arguments.of(new CreateReviewDTO("1", 2.2, 2L, 1L), false,
+                        ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new CreateReviewDTO("1", 2.2, 1L, 2L), false,
+                        UserNotFoundException.class, "User not found!"),
+                Arguments.of(new CreateReviewDTO("1", 2.2, 3L, 1L), true,
+                        ReviewExistException.class, "Review already exist!"),
+                Arguments.of(new CreateReviewDTO("1", 2.2, 1L, 3L), true,
+                        ReviewExistException.class, "Review already exist!")
+        );
+    }
+
+    private static Stream<Arguments> provideGetSingleReviewOnProductByUserIdData() {
+        return Stream.of(
+                Arguments.of(new GetReviewDTO(1L, 1L), true,
+                        null, null),
+                Arguments.of(new GetReviewDTO(1L, 2L), false,
+                        ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new GetReviewDTO(2L, 1L), false,
+                        UserNotFoundException.class, "User not found!"),
+                Arguments.of(new GetReviewDTO(3L, 1L), true,
+                        ReviewExistException.class, "Review not found!"),
+                Arguments.of(new GetReviewDTO(1L, 3L), true,
+                        ReviewExistException.class, "Review not found!")
+        );
+    }
+
+    private static Stream<Arguments> provideDeleteReviewOnProductByUserIdData() {
+        return Stream.of(
+                Arguments.of(new DeleteReviewDTO(1L, 1L), true,
+                        null, null),
+                Arguments.of(new DeleteReviewDTO(1L, 2L), false,
+                        ProductNotFoundException.class, "Product not found."),
+                Arguments.of(new DeleteReviewDTO(2L, 1L), false,
+                        UserNotFoundException.class, "User not found!")
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideCreateReviewData")
     public <T extends Exception> void createReview(CreateReviewDTO dto, boolean isValid, Class<T> exClass, String message) {
@@ -110,7 +151,7 @@ public class ReviewServiceTests {
     @ParameterizedTest
     @MethodSource("provideDeleteReviewOnProductByUserIdData")
     public <T extends Exception> void deleteReviewOnProductByUserIdTest(DeleteReviewDTO dto, boolean isValid,
-                                                  Class<T> exClass, String message) {
+                                                                        Class<T> exClass, String message) {
         when(productRepos.findById(dto.getProductId())).then(invocation ->
                 (invocation.getArgument(0, Long.class) != 2L) ? Optional.of(new Product()) : Optional.empty());
         when(userRepos.findById(dto.getUserId())).then(invocation ->
@@ -147,44 +188,5 @@ public class ReviewServiceTests {
         UserReviewsDTO reviewsDTO = reviewService.getAllUserReviews(getReviewsDTO);
         Assertions.assertEquals(List.of(2L, 2),
                 List.of(reviewsDTO.getCountOf(), reviewsDTO.getReviews().size()));
-    }
-
-    private static Stream<Arguments> provideCreateReviewData() {
-        return Stream.of(
-                Arguments.of(new CreateReviewDTO("1", 2.2, 1L, 1L), true,
-                        null, null),
-                Arguments.of(new CreateReviewDTO("1", 2.2, 2L, 1L), false,
-                        ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new CreateReviewDTO("1", 2.2, 1L, 2L), false,
-                        UserNotFoundException.class, "User not found!"),
-                Arguments.of(new CreateReviewDTO("1", 2.2, 3L, 1L), true,
-                        ReviewExistException.class, "Review already exist!"),
-                Arguments.of(new CreateReviewDTO("1", 2.2, 1L, 3L), true,
-                        ReviewExistException.class, "Review already exist!")
-        );
-    }
-    private static Stream<Arguments> provideGetSingleReviewOnProductByUserIdData() {
-        return Stream.of(
-                Arguments.of(new GetReviewDTO(1L, 1L), true,
-                        null, null),
-                Arguments.of(new GetReviewDTO(1L, 2L), false,
-                        ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new GetReviewDTO(2L, 1L), false,
-                        UserNotFoundException.class, "User not found!"),
-                Arguments.of(new GetReviewDTO(3L, 1L), true,
-                        ReviewExistException.class, "Review not found!"),
-                Arguments.of(new GetReviewDTO(1L, 3L), true,
-                        ReviewExistException.class, "Review not found!")
-        );
-    }
-    private static Stream<Arguments> provideDeleteReviewOnProductByUserIdData() {
-        return Stream.of(
-                Arguments.of(new DeleteReviewDTO(1L, 1L), true,
-                        null, null),
-                Arguments.of(new DeleteReviewDTO(1L, 2L), false,
-                        ProductNotFoundException.class, "Product not found."),
-                Arguments.of(new DeleteReviewDTO(2L, 1L), false,
-                        UserNotFoundException.class, "User not found!")
-        );
     }
 }

@@ -6,9 +6,6 @@ import it.academy.cursebackspring.dto.request.GetProductPageDTO;
 import it.academy.cursebackspring.dto.request.UpdateProductDTO;
 import it.academy.cursebackspring.dto.response.ProductDTO;
 import it.academy.cursebackspring.dto.response.ProductsDTO;
-import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 
 public interface ProductService {
     void addProduct(CreateProductDTO createProductDTO);

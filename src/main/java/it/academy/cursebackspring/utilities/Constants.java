@@ -115,4 +115,5 @@ public class Constants {
     public static final int MIN_BUILDING = 1;
     public static final int MAX_BUILDING = 1000;
     public static final String REGEXP_EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    public static final String USER_ID_PARAM_KEY = "userId";
 }

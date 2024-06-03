@@ -5,9 +5,6 @@ import it.academy.cursebackspring.dto.request.UpdateUserDTO;
 import it.academy.cursebackspring.dto.response.UserDTO;
 import it.academy.cursebackspring.dto.response.UsersDTO;
 import it.academy.cursebackspring.models.User;
-import it.academy.cursebackspring.utilities.Constants;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService {

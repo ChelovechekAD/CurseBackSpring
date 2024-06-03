@@ -43,6 +43,35 @@ public class CategoryServiceTests {
     @InjectMocks
     CategoryServiceImpl categoryService;
 
+    private static Stream<Arguments> provideAddCategoryData() {
+        return Stream.of(
+                Arguments.of("New category", true, null),
+                Arguments.of("Existed category", false, "Category already exist!")
+        );
+    }
+
+    private static Stream<Arguments> provideUpdateCategoryData() {
+        return Stream.of(
+                Arguments.of(new UpdateCategoryDTO(1L, "New name"), true, null),
+                Arguments.of(new UpdateCategoryDTO(2L, "Asd"), false, "Requested catalog not exist.")
+        );
+    }
+
+    private static Stream<Arguments> provideDeleteCategoryData() {
+        return Stream.of(
+                Arguments.of(1L, false, true, null, null),
+                Arguments.of(1L, true, true, null, null),
+                Arguments.of(2L, true, false, CategoryNotFoundException.class, "Requested catalog not exist."),
+                Arguments.of(2L, false, false, CategoryNotFoundException.class, "Requested catalog not exist."),
+                Arguments.of(3L, true, true, null, null),
+                Arguments.of(3L, false, false, CategoryDeleteException.class, "Products with this category exist!" +
+                        " You need to use root flag to delete all!"),
+                Arguments.of(4L, false, false, CategoryDeleteException.class, "Products with this category exist!" +
+                        " You need to use root flag to delete all!"),
+                Arguments.of(4L, true, false, ProductUsedInOrdersException.class, "This product already used in order(s)")
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideAddCategoryData")
     public void addCategoryTest(String name, boolean isValid, String message) {
@@ -76,7 +105,7 @@ public class CategoryServiceTests {
                 verify(productRepos, times(1)).deleteAllByCategory_Id(categoryId);
             }
             verify(categoryRepos, times(1)).deleteById(categoryId);
-        }else {
+        } else {
             Exception exception = Assertions.assertThrows(exClass, () -> categoryService.deleteCategory(categoryId, root));
             Assertions.assertEquals(message, exception.getMessage());
         }
@@ -84,7 +113,7 @@ public class CategoryServiceTests {
 
     @ParameterizedTest
     @MethodSource("provideUpdateCategoryData")
-    public void updateCategory(UpdateCategoryDTO dto, boolean isValid, String message){
+    public void updateCategory(UpdateCategoryDTO dto, boolean isValid, String message) {
         Category existedCategory = new Category(1L, "Test");
         when(categoryRepos.findById(dto.getCategoryId())).then(invocation ->
                 (invocation.getArgument(0, Long.class) == 1L) ? Optional.of(existedCategory) : Optional.empty());
@@ -95,14 +124,14 @@ public class CategoryServiceTests {
             Category actualCategory = categoryArgumentCaptor.getValue();
             Assertions.assertEquals(List.of(existedCategory, existedCategory.getCategoryName()),
                     List.of(actualCategory, dto.getCategoryName()));
-        }else {
+        } else {
             Exception exception = Assertions.assertThrows(CategoryNotFoundException.class, () -> categoryService.updateCategory(dto));
             Assertions.assertEquals(message, exception.getMessage());
         }
     }
 
     @Test
-    public void getAllCategoriesTest(){
+    public void getAllCategoriesTest() {
         when(categoryRepos.findAll()).thenReturn(List.of(new Category(1L, "1"),
                 new Category(2L, "2")));
         CategoriesDTO actualCategoriesDTO = categoryService.getAllCategories();
@@ -113,34 +142,6 @@ public class CategoryServiceTests {
                         actualListCategoryDTO.get(0).getCategoryName(),
                         actualListCategoryDTO.get(1).getCategoryId(),
                         actualListCategoryDTO.get(1).getCategoryName()));
-    }
-
-
-    private static Stream<Arguments> provideAddCategoryData() {
-        return Stream.of(
-                Arguments.of("New category", true, null),
-                Arguments.of("Existed category", false, "Category already exist!")
-        );
-    }
-    private static Stream<Arguments> provideUpdateCategoryData() {
-        return Stream.of(
-                Arguments.of(new UpdateCategoryDTO(1L, "New name"), true, null),
-                Arguments.of(new UpdateCategoryDTO(2L, "Asd"), false, "Requested catalog not exist.")
-        );
-    }
-    private static Stream<Arguments> provideDeleteCategoryData() {
-        return Stream.of(
-                Arguments.of(1L, false, true, null, null),
-                Arguments.of(1L, true, true, null, null),
-                Arguments.of(2L, true, false, CategoryNotFoundException.class, "Requested catalog not exist."),
-                Arguments.of(2L, false, false, CategoryNotFoundException.class, "Requested catalog not exist."),
-                Arguments.of(3L, true, true, null, null),
-                Arguments.of(3L, false, false, CategoryDeleteException.class, "Products with this category exist!" +
-                        " You need to use root flag to delete all!"),
-                Arguments.of(4L, false, false, CategoryDeleteException.class, "Products with this category exist!" +
-                        " You need to use root flag to delete all!"),
-                Arguments.of(4L, true, false, ProductUsedInOrdersException.class, "This product already used in order(s)")
-        );
     }
 
 }

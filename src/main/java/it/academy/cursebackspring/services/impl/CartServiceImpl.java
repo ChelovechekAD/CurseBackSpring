@@ -14,17 +14,13 @@ import it.academy.cursebackspring.repositories.CartItemRepos;
 import it.academy.cursebackspring.repositories.ProductRepos;
 import it.academy.cursebackspring.repositories.UserRepos;
 import it.academy.cursebackspring.services.CartService;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
