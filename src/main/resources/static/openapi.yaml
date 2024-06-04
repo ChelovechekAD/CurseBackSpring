@@ -12,24 +12,16 @@ info:
   version: '1.0'
 servers:
   - url: http://localhost:8080
-    description: Generated server url
+    description: Dev server
 security:
   - Bearer-Authentication: [ ]
 paths:
-  /api/v1/user/{userId}/update:
+  /api/v1/user/update:
     put:
       tags:
         - User controller
       operationId: updateUserInfo
       description: Allows you to update user info such as name, surname, city, street or building.
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
       requestBody:
         content:
           application/json:
@@ -336,20 +328,12 @@ paths:
             '*/*':
               schema:
                 type: object
-  /api/v1/user/{userId}:
+  /api/v1/user:
     get:
-      description: Allows you to retrieve user information by user ID
+      description: Allows you to retrieve user information
       tags:
         - User controller
       operationId: getUser
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
       responses:
         '200':
           description: OK
@@ -357,20 +341,13 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UserDTO'
-  /api/v1/user/{userId}/reviews:
+  /api/v1/user/reviews:
     get:
-      description: Allows you to retrieve user reviews by user ID
+      description: Allows you to retrieve user reviews
       tags:
         - User controller
       operationId: getUserReviews
       parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
         - name: dto
           in: query
           required: true
@@ -383,20 +360,13 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UserReviewsDTO'
-  /api/v1/user/{userId}/orders:
+  /api/v1/user/orders:
     get:
-      description: Allow you to retrieve user orders by user ID
+      description: Allow you to retrieve user orders
       tags:
         - User controller
       operationId: getUserOrders
       parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
         - name: dto
           in: query
           required: true
@@ -409,20 +379,13 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/OrdersDTO'
-  /api/v1/user/{userId}/orders/{orderId}/items:
+  /api/v1/user/orders/{orderId}/items:
     get:
       description: Allows you to retrieve all order items in the order by order ID
       tags:
         - User controller
       operationId: getUserOrderItems
       parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
         - name: orderId
           in: path
           required: true
@@ -544,18 +507,10 @@ paths:
                 $ref: '#/components/schemas/CategoriesDTO'
   /api/v1/cart/:
     get:
-      description: Allows you to add a new item to the cart
+      description: Allows you to get all items out the cart
       tags:
         - Cart controller
       operationId: getAllUserCart
-      parameters:
-        - name: userId
-          in: query
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
       responses:
         '200':
           description: OK
@@ -601,20 +556,12 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/OrdersDTO"
-  /api/v1/user/{userId}/delete:
+  /api/v1/user/delete:
     delete:
       description: Allows you to delete the user
       tags:
         - User controller
       operationId: deleteUser
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
       responses:
         '200':
           description: OK
@@ -657,13 +604,6 @@ paths:
             minimum: 1
             type: integer
             format: int64
-        - name: userId
-          in: query
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-            format: int64
       responses:
         '200':
           description: OK
@@ -692,6 +632,27 @@ paths:
             '*/*':
               schema:
                 type: object
+  /api/v1/admin/get/order/{orderId}:
+    delete:
+      description: Allows you to get the items from the order
+      tags:
+        - Admin controller
+      operationId: getOrderItems
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrderItemsDTO'
   /api/v1/admin/delete/order/{id}:
     delete:
       description: Allows you to delete an order by their ID
@@ -774,18 +735,11 @@ components:
       required:
         - building
         - city
-        - id
         - name
         - street
         - surname
       type: object
       properties:
-        id:
-          default: 1
-          description: Target user ID
-          minimum: 1
-          type: integer
-          format: int64
         name:
           type: string
           default: "New name"
@@ -960,7 +914,6 @@ components:
       required:
         - productId
         - quantity
-        - userId
       type: object
       properties:
         quantity:
@@ -975,25 +928,12 @@ components:
           minimum: 1
           type: integer
           format: int64
-        userId:
-          default: 1
-          description: ID of the user for whom the shopping cart is updated
-          minimum: 1
-          type: integer
-          format: int64
     CreateOrderDTO:
       description: Required data for creating a new order
       required:
         - orderItems
-        - userId
       type: object
       properties:
-        userId:
-          default: 1
-          description: User ID who is trying to create the order
-          minimum: 1
-          type: integer
-          format: int64
         orderItems:
           description: Included order items
           type: array
@@ -1084,7 +1024,7 @@ components:
           type: integer
           format: int64
         name:
-          default: "Product name"
+          default: "ProductName"
           description: Product name
           pattern: ^[A-zА-я0-9]{1,40}$
           type: string
@@ -1100,7 +1040,7 @@ components:
           type: number
           format: double
         imageLink:
-          default: "/not-found-404.jpg"
+          default: "not-found-404.jpg"
           description: Product image link
           type: string
     JsonNode:
@@ -1153,13 +1093,12 @@ components:
       required:
         - countPerPage
         - pageNum
-        - userId
       type: object
       properties:
         pageNum:
           default: 1
           description: Num of the page
-          minimum: 0
+          minimum: 1
           type: integer
           format: int32
         countPerPage:
@@ -1168,12 +1107,6 @@ components:
           minimum: 10
           type: integer
           format: int32
-        userId:
-          default: 1
-          description: Target user ID
-          minimum: 1
-          type: integer
-          format: int64
     UserReviewInfoDTO:
       description: User review information
       required:
@@ -1228,13 +1161,12 @@ components:
       required:
         - countPerPage
         - pageNum
-        - userId
       type: object
       properties:
         pageNum:
           description: Num of the page
-          default: 0
-          minimum: 0
+          default: 1
+          minimum: 1
           type: integer
           format: int32
         countPerPage:
@@ -1243,12 +1175,6 @@ components:
           minimum: 10
           type: integer
           format: int32
-        userId:
-          default: 1
-          description: Target User ID
-          minimum: 1
-          type: integer
-          format: int64
     OrderDTO:
       description: Order information
       required:
@@ -1307,9 +1233,9 @@ components:
       type: object
       properties:
         pageNum:
-          default: 0
+          default: 1
           description: Page number
-          minimum: 0
+          minimum: 1
           type: integer
           format: int32
         countPerPage:
@@ -1387,7 +1313,7 @@ components:
         pageNum:
           default: 1
           description: Page number
-          minimum: 0
+          minimum: 1
           type: integer
           format: int32
         categoryFilter:
@@ -1459,7 +1385,7 @@ components:
       type: object
       properties:
         pageNum:
-          minimum: 0
+          minimum: 1
           type: integer
           format: int32
         countPerPage:
@@ -1543,8 +1469,8 @@ components:
           type: integer
           format: int32
         pageNum:
-          default: 0
-          minimum: 0
+          default: 1
+          minimum: 1
           type: integer
           format: int32
     CartItemsDTO:

@@ -108,7 +108,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public ReviewsDTO getAllReviewsPage(GetReviewsDTO getReviewsDTO) {
         Page<Review> reviewPage = reviewRepos.findAllByReviewPK_ProductId(getReviewsDTO.getProductId(),
-                PageRequest.of(getReviewsDTO.getPageNum(), getReviewsDTO.getCountPerPage()));
+                PageRequest.of(getReviewsDTO.getPageNum() - 1, getReviewsDTO.getCountPerPage()));
         return ReviewMapper.INSTANCE.toDTOFromEntityList(reviewPage, reviewPage.getTotalElements());
     }
 
@@ -122,7 +122,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public UserReviewsDTO getAllUserReviews(GetUserReviewsDTO getUserReviewsDTO) {
         Page<Review> reviewPage = reviewRepos.findAllByReviewPK_UserId(getUserReviewsDTO.getUserId(),
-                PageRequest.of(getUserReviewsDTO.getPageNum(), getUserReviewsDTO.getCountPerPage()));
+                PageRequest.of(getUserReviewsDTO.getPageNum() - 1, getUserReviewsDTO.getCountPerPage()));
         return ReviewMapper.INSTANCE.toUserReviewsDTOFromEntityList(reviewPage, reviewPage.getTotalElements());
     }
 

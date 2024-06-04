@@ -39,7 +39,7 @@ public class Constants {
     public static final String TOKEN_WAS_STOLEN_EXCEPTION_MESSAGE = "Token was stolen!";
     public static final String REG_EXP_PRODUCT_NAME = "^[A-zА-я0-9]{1,40}$";
     public static final String COUNT_PER_PAGE_VALIDATION_EXCEPTION = "Count of elements per page cannot be less than 10.";
-    public static final String PAGE_NUM_VALIDATION_EXCEPTION = "Page num cannot be less than 0.";
+    public static final String PAGE_NUM_VALIDATION_EXCEPTION = "Page num cannot be less than 1.";
     public static final String CATEGORY_ID_VALIDATION_EXCEPTION = "Category id cannot be less than 1.";
     public static final String RATING_MUST_BE_BETWEEN_VALIDATION_EXCEPTION = "Rating must be between 0 and 10";
     public static final String PRICE_CANNOT_BE_LESS_THAN_VALIDATION_EXCEPTION = "Price cannot be less than 1.";
@@ -97,7 +97,7 @@ public class Constants {
     public static final String MIN_RATING = "0";
     public static final String MAX_RATING = "10";
     public static final int MIN_ORDER_ID = 1;
-    public static final int MIN_PAGE_NUM = 0;
+    public static final int MIN_PAGE_NUM = 1;
     public static final int MIN_COUNT_PER_PAGE = 10;
     public static final String USER_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION = "User id cannot be null.";
     public static final String PAGE_NUM_CANNOT_BE_NULL_VALIDATION_EXCEPTION = "Page num cannot be null.";

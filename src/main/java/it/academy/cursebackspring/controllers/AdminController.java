@@ -16,7 +16,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,12 +75,12 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get/order/{orderId}/items")
+    @GetMapping("/get/order/{orderId}")
     public ResponseEntity<OrderItemsDTO> getOrderItems(@PathVariable(name = "orderId")
-                                                           @Valid
-                                                           @NotNull
-                                                           @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION) Long orderId,
-                                                           @Valid GetOrderItemsDTO dto) {
+                                                       @Valid
+                                                       @NotNull
+                                                       @Min(value = 1, message = Constants.ORDER_ID_VALIDATION_EXCEPTION) Long orderId,
+                                                       @Valid GetOrderItemsDTO dto) {
         dto.setOrderId(orderId);
         OrderItemsDTO orderItemsDTO = orderService.getOrderItems(dto);
         return ResponseEntity.ok(orderItemsDTO);

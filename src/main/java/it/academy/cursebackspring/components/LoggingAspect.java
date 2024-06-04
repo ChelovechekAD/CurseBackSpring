@@ -1,5 +1,6 @@
 package it.academy.cursebackspring.components;
 
+import it.academy.cursebackspring.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -28,8 +29,9 @@ public class LoggingAspect {
             Object result = joinPoint.proceed();
             log.info("<< Method successfully end: {}() - {}", methodName, result);
             return result;
-        } catch (Throwable e) {
-            log.error("Error: {}", e.getLocalizedMessage(), e);
+        } catch (NotFoundException | ExistException | CategoryDeleteException | ProductUsedInOrdersException |
+                 WrongPasswordException | PasswordMatchException e) {
+            log.warn("<< Method end with exceptions: {}(); Warn: {}", methodName, e.getLocalizedMessage());
             throw e;
         }
     }

@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UsersDTO getUsersPage(RequestDataDetailsDTO requestDataDetailsDTO) {
-        Page<User> userPage = userRepos.findAll(PageRequest.of(requestDataDetailsDTO.getPageNum(),
+        Page<User> userPage = userRepos.findAll(PageRequest.of(requestDataDetailsDTO.getPageNum() - 1,
                 requestDataDetailsDTO.getCountPerPage()));
         return UserMapper.INSTANCE.toUsersDTOFromEntityList(userPage, userPage.getTotalElements());
     }

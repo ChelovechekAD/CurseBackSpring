@@ -66,9 +66,9 @@ public class ProductController {
 
     @GetMapping("/reviews/user_review")
     public ResponseEntity<ReviewDTO> getUserReviewOnProduct(@PathVariable(value = "productId")
-                                                    @Valid
-                                                    @NotNull
-                                                    @Min(value = 1, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION) Long productId) {
+                                                            @Valid
+                                                            @NotNull
+                                                            @Min(value = 1, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION) Long productId) {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         ReviewDTO reviewDTO = reviewService.getSingleReviewOnProductByUserId(new GetReviewDTO(userId, productId));
         return ResponseEntity.ok(reviewDTO);

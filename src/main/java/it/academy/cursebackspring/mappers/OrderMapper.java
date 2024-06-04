@@ -17,7 +17,8 @@ public interface OrderMapper {
     @Mappings({
             @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "orderStatus", ignore = true),
-            @Mapping(target = "user", source = "user")
+            @Mapping(target = "user", source = "user"),
+            @Mapping(target = "id", ignore = true)
     })
     Order toNewEntity(CreateOrderDTO dto, User user);
 

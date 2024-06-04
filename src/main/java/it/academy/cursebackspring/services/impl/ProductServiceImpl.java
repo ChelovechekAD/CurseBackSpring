@@ -111,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public ProductsDTO getAllExistProducts(GetProductPageDTO dto) {
-        PageRequest pageRequest = PageRequest.of(dto.getPageNum(), dto.getCountPerPage());
+        PageRequest pageRequest = PageRequest.of(dto.getPageNum() - 1, dto.getCountPerPage());
         Page<Product> products;
         List<ParamFilterDTO> filters = new ArrayList<>();
         if (dto.getNameFilter() != null) {

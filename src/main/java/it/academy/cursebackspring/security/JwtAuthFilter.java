@@ -31,7 +31,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserService userService;
-    private final String ignorePattern = "/api/v1/auth/";
 
     @Override
     protected void doFilterInternal(
@@ -76,7 +75,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (UnauthorizedException | JwtException e) {
-            log.error("During jwt filter execution, successfully catch exception: {} with message \"{}\"", e.getClass(), e.getMessage());
+            log.warn("During jwt filter execution, successfully catch exception: {} with message \"{}\"", e.getClass(), e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().print(e.getMessage());
         }
@@ -85,6 +84,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.contains(ignorePattern);
+        return path.contains("/api/v1/auth/");
     }
 }

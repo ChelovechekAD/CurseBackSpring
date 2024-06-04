@@ -6,6 +6,7 @@ import it.academy.cursebackspring.dto.request.RegUserDTO;
 import it.academy.cursebackspring.dto.response.LoginUserJwtDTO;
 import it.academy.cursebackspring.enums.RoleEnum;
 import it.academy.cursebackspring.exceptions.PasswordMatchException;
+import it.academy.cursebackspring.exceptions.WrongPasswordException;
 import it.academy.cursebackspring.mappers.UserMapper;
 import it.academy.cursebackspring.models.User;
 import it.academy.cursebackspring.repositories.RoleRepos;
@@ -67,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
                 .loadUserByUsername(loginUserDTO.getEmail());
 
         if (!passwordEncoder.matches(loginUserDTO.getPassword(), user.getPassword())) {
-            throw new PasswordMatchException();
+            throw new WrongPasswordException();
         }
 
         return jwtService.generateNewPairOfTokens(user);

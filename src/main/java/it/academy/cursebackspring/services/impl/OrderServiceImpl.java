@@ -99,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public OrdersDTO getListOfOrders(RequestDataDetailsDTO dto) {
-        PageRequest pageRequest = PageRequest.of(dto.getPageNum(), dto.getCountPerPage());
+        PageRequest pageRequest = PageRequest.of(dto.getPageNum() - 1, dto.getCountPerPage());
         Page<Order> orders = orderRepos.findAll(pageRequest);
         List<OrderDTO> orderDTOList = orders.stream()
                 .map(e -> OrderMapper.INSTANCE.toOrderDTO(e, orderItemRepos.countOrderItemsByOrderItemPK_OrderId(e.getId())))
@@ -119,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
         if (!userRepos.existsById(dto.getUserId())) {
             throw new UserNotFoundException();
         }
-        Page<Order> orders = orderRepos.getOrdersByUserId(dto.getUserId(), PageRequest.of(dto.getPageNum(), dto.getCountPerPage()));
+        Page<Order> orders = orderRepos.getOrdersByUserId(dto.getUserId(), PageRequest.of(dto.getPageNum() - 1, dto.getCountPerPage()));
         List<OrderDTO> orderDTOList = orders.stream()
                 .map(e -> OrderMapper.INSTANCE.toOrderDTO(e, orderItemRepos.countOrderItemsByOrderItemPK_OrderId(e.getId())))
                 .toList();
@@ -140,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
             throw new OrderNotFoundException();
         }
         Page<OrderItem> orderItems = orderItemRepos.getOrderItemsPageByOrderItemPK_OrderId(dto.getOrderId(),
-                PageRequest.of(dto.getPageNum(), dto.getCountPerPage()));
+                PageRequest.of(dto.getPageNum() - 1, dto.getCountPerPage()));
         return OrderItemMapper.INSTANCE.toOrderItemsDTO(orderItems.stream().toList(), orderItems.getTotalElements());
     }
 

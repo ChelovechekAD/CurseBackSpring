@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HandlerExceptions {
 
-    @ExceptionHandler({NotFoundException.class, NoResourceFoundException.class})
+    @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> notFoundExceptions(Exception e) {
         return buildExceptionResponse(HttpStatus.NOT_FOUND, e);
     }
@@ -36,19 +36,20 @@ public class HandlerExceptions {
         return buildExceptionResponse(HttpStatus.CONFLICT, e);
     }
 
-    @ExceptionHandler({PasswordMatchException.class, RefreshTokenInvalidException.class, RequestParamInvalidException.class,
-            WrongPasswordException.class})
-    public ResponseEntity<?> authExceptions(Exception e) {
+    @ExceptionHandler({PasswordMatchException.class, WrongPasswordException.class})
+    public ResponseEntity<?> token(Exception e) {
         return buildExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<?> unAuthExceptions(UnauthorizedException e) {
+        loggingWarnException(e);
         return buildExceptionResponse(HttpStatus.UNAUTHORIZED, e);
     }
 
     @ExceptionHandler(AccessDeniedCustomException.class)
     public ResponseEntity<?> accessExceptions(AccessDeniedCustomException e) {
+        loggingWarnException(e);
         return buildExceptionResponse(HttpStatus.FORBIDDEN, e);
     }
 
@@ -57,7 +58,7 @@ public class HandlerExceptions {
         final List<Violation> violations = e.getBindingResult().getFieldErrors().stream()
                 .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
-        log.error(e.getLocalizedMessage());
+        loggingWarnException(e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorResponse(violations));
     }
 
@@ -73,28 +74,35 @@ public class HandlerExceptions {
                         )
                 )
                 .collect(Collectors.toList());
-        log.error(e.getLocalizedMessage());
+        log.warn(e.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorResponse(violations));
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<?> httpMessageNotReadableException(HttpMessageNotReadableException e) {
+    @ExceptionHandler({HttpMessageNotReadableException.class, RefreshTokenInvalidException.class,
+            RequestParamInvalidException.class,})
+    public ResponseEntity<?> httpMessageNotReadableException(Exception e) {
+        loggingWarnException(e);
         return buildExceptionResponse(HttpStatus.BAD_REQUEST, e);
     }
 
-    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    @ExceptionHandler({InternalAuthenticationServiceException.class, NoResourceFoundException.class})
     public ResponseEntity<?> internalAuthenticationServiceException(Exception e) {
+        loggingWarnException(e);
         return buildExceptionResponse(HttpStatus.NOT_FOUND, e);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> internalServerError(Exception e) throws Exception {
+        log.error("Error {}: {}", e.getClass(), e.getLocalizedMessage());
         if (e instanceof AccessDeniedException || e instanceof AuthenticationException) {
             throw e;
         }
         return buildExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
+    private void loggingWarnException(Exception e) {
+        log.warn("Warn {}: {}", e.getClass(), e.getLocalizedMessage());
+    }
 
     private ResponseEntity<Object> buildExceptionResponse(HttpStatusCode code, Exception e) {
         var exceptionResponse = ExceptionResponse.builder()
@@ -102,7 +110,6 @@ public class HandlerExceptions {
                 .ExceptionMessage(e.getMessage())
                 .TimeStamp(LocalDateTime.now())
                 .build();
-        log.error("Error: {}", e.getLocalizedMessage());
         return ResponseEntity.status(code).body(exceptionResponse);
     }
 
