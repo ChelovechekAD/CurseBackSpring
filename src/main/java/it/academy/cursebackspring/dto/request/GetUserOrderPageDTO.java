@@ -22,8 +22,6 @@ public class GetUserOrderPageDTO {
     @Min(value = Constants.MIN_COUNT_PER_PAGE, message = Constants.COUNT_PER_PAGE_VALIDATION_EXCEPTION)
     private Integer countPerPage;
 
-    @NotNull(message = Constants.USER_ID_CANNOT_BE_NULL_VALIDATION_EXCEPTION)
-    @Min(value = Constants.MIN_USER_ID, message = Constants.USER_ID_VALIDATION_EXCEPTION)
     private Long userId;
 
 }

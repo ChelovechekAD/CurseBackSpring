@@ -471,7 +471,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ReviewDTO'
-  /api/v1/catalog/product/{productId}/:
+  /api/v1/catalog/product/{productId}:
     get:
       description: Allows you to view the product page with additional information
       tags:
@@ -882,7 +882,6 @@ components:
       required:
         - description
         - rating
-        - userId
       type: object
       properties:
         description:
@@ -898,17 +897,6 @@ components:
           exclusiveMinimum: false
           type: number
           format: double
-        productId:
-          default: 1
-          description: Target product ID
-          type: integer
-          format: int64
-        userId:
-          default: 1
-          description: User ID who created the review
-          minimum: 1
-          type: integer
-          format: int64
     AddOrUpdateItemInCartDTO:
       description: Required data for adding a new or updating an existing item in the cart
       required:

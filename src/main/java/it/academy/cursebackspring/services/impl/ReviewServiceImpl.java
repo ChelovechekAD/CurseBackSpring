@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
             throw new ReviewExistException();
         }
         reviewRepos.save(review);
+
         updateTotalRatingForProduct(product);
     }
 
@@ -127,10 +130,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private void updateTotalRatingForProduct(Product product) {
-        Double newRating = reviewRepos.getAvgRating();
+        Double newRating = reviewRepos.getAvgRating(product.getId());
         newRating = Optional.ofNullable(newRating).orElse(0d);
+        BigDecimal bd = new BigDecimal(newRating).setScale(2, RoundingMode.HALF_UP);
+        newRating = Double.parseDouble(bd.stripTrailingZeros().toPlainString());
         product.setRating(newRating);
-        productRepos.save(product);
     }
 
     private List<Object> getUserAndProduct(Long userId, Long productId) {

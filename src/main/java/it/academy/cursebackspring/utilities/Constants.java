@@ -32,7 +32,7 @@ public class Constants {
     public static final String THIS_PRODUCT_ALREADY_USED_IN_ORDER_S = "This product already used in order(s)";
     public static final String EXIST_EXCEPTION_MESSAGE = "Item already exist!";
 
-    public static final String SELECT_AVG_RATING_FROM_REVIEW = "select avg(rating) from Review";
+    public static final String SELECT_AVG_RATING_FROM_REVIEW = "select avg(rating) from Review where reviewPK.product.id = ?1";
     public static final String TOKEN_WAS_STOLEN_LOG_MESSAGE = "Token was stolen!\n" +
             " User email from token: %s \n" +
             " User email from context: %s";

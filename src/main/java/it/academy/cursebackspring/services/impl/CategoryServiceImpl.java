@@ -85,7 +85,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepos.findById(dto.getCategoryId())
                 .orElseThrow(CategoryNotFoundException::new);
         category.setCategoryName(dto.getCategoryName());
-        categoryRepos.save(category);
     }
 
     /**

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-@RequestMapping("/api/v1/catalog/product/{productId}/")
+@RequestMapping("/api/v1/catalog/product/{productId}")
 public class ProductController {
 
     private final ProductService productService;
@@ -53,12 +53,13 @@ public class ProductController {
     }
 
     @PostMapping("/reviews/create")
-    @PreAuthorize(value = "#dto.userId == authentication.principal.id")
     public ResponseEntity<?> createNewReview(@PathVariable(value = "productId")
                                              @Valid
                                              @NotNull
                                              @Min(value = 1, message = Constants.PRODUCT_ID_VALIDATION_EXCEPTION) Long id,
                                              @Valid @RequestBody CreateReviewDTO dto) {
+        Long userId  = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        dto.setUserId(userId);
         dto.setProductId(id);
         reviewService.createReview(dto);
         return ResponseEntity.ok().build();

@@ -17,7 +17,7 @@ public interface ReviewRepos extends JpaRepository<Review, ReviewPK> {
     Page<Review> findAllByReviewPK_UserId(Long userId, Pageable pageable);
 
     @Query(Constants.SELECT_AVG_RATING_FROM_REVIEW)
-    Double getAvgRating();
+    Double getAvgRating(Long productId);
 
 }
 
